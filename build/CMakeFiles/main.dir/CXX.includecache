@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/a1/Documents/stuff/cstuff/vlad-2009/graph.cpp
+graph.h
+/Users/a1/Documents/stuff/cstuff/vlad-2009/graph.h
+
+/Users/a1/Documents/stuff/cstuff/vlad-2009/graph.h
+unordered_map
+-
+iostream
+-
+fstream
+-
+
+/Users/a1/Documents/stuff/cstuff/vlad-2009/main.cpp
+graph.h
+/Users/a1/Documents/stuff/cstuff/vlad-2009/graph.h
+
