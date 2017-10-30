@@ -8,5 +8,6 @@ public:
     std::unordered_map <int, std::unordered_map <int, int>> edges;
     void AddEdge(int index, int vertex, double weight);
     Graph(std::string filename);
+    void ParseLinks(std::string links);
     void Print();
 };
