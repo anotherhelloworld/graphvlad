@@ -1,24 +1,29 @@
 #pragma once
 #include <unordered_map>
 #include <unordered_set>
+#include <set>
 #include <iostream>
 #include <fstream>
 #include <queue>
 #include <string>
+#include <atomic>
+#include <thread>
 #include "edge.h"
 
 class Graph {
 public:
-    //std::unordered_map <int, std::unordered_map <int, int>> edges;
-    std::unordered_map <int, std::unordered_set <Edge>> edges;
-    void AddEdge(int index, int vertex, double weight);
+    std::unordered_map <int, std::unordered_set <Edge, EdgeHash>> edges;
     Graph(std::string filename);
     void ParseLinks(std::string links);
     void Print();
+    void RunDijkstraAsync();
 private:
     static const long long inf = 2e9;
     int count;
-    void Dijkstra(int v);
+    std::vector <std::vector <double>> dists;
+    std::vector <double> Dijkstra(int v);
+    void RunDijkstraThread(std::atomic<int>& n);
+    void AddEdge(int index, int vertex, double weight);
 };
 
 class Compare {

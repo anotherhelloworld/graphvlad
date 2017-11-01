@@ -3,16 +3,20 @@
 
 using namespace std;
 
+//Public methods
+
 Graph::Graph(std::string filename) {
-//    std::ifstream in(filename);
-//    int count = 1653;
-//    int index, vertex;
-//    double weight;
-//    for (int i = 0; i < count; i++) {
-//        in >> index >> vertex >> weight;
-//        AddEdge(index, vertex, weight);
-//        AddEdge(vertex, index, weight);
-//    }
+    std::ifstream in(filename);
+    int count = 1653;
+    int index, vertex;
+    double weight;
+    for (int i = 0; i < count; i++) {
+        in >> index >> vertex >> weight;
+        --index;
+        --vertex;
+        AddEdge(index, vertex, weight);
+        AddEdge(vertex, index, weight);
+    }
 }
 
 void Graph::ParseLinks(std::string links) {
@@ -45,7 +49,43 @@ void Graph::ParseLinks(std::string links) {
     out << "}" << endl;
 }
 
-void Graph::Dijkstra(int v) {
+void Graph::Print() {
+    for (auto i : edges) {
+        for (auto& j : i.second) {
+            std::cout << i.first << " " << j.GetRight() << " " << j.GetWeight() << std::endl;
+        }
+    }
+}
+
+void Graph::RunDijkstraAsync() {
+    std::atomic<int> n(0);
+    int threads_count = 4; //todo replace
+    dists.resize(edges.size());
+    std::vector<thread> threads;
+    for (int i = 0; i < threads_count; ++i)
+        threads.push_back(thread(&Graph::RunDijkstraThread, this, std::ref(n)));
+    for (int i = 0; i < threads_count; ++i)
+        threads[i].join();
+
+    double sum = 0;
+    //std::ofstream out("dists.out");
+    FILE* output = fopen("dist.out", "w");
+    for (auto i : dists) {
+        for (auto j : i) {
+            fprintf(output, "%lf ", j); // fprintf faster
+            if (j != inf)
+                sum += j;
+            //out << j << " ";
+        }
+        fprintf(output, "\n");
+        //out << std::endl;
+    }
+    std::cout << sum << std::endl;
+}
+
+//Private methods
+
+vector<double> Graph::Dijkstra(int v) {
     std::vector<double> dist(edges.size(), inf);
     std::vector<int> visited(edges.size(), 0);
     std::vector<int> path(edges.size(), -1);
@@ -56,10 +96,10 @@ void Graph::Dijkstra(int v) {
 
     while (!q.empty()) {
         std::pair<double, int> from = q.top(); q.pop();
-        for (auto edge : edges[from.second]) {
-            int to = edge.getRight();
+        for (auto& edge : edges[from.second]) {
+            int to = edge.GetRight();
             if (!visited[to]) {
-                double tmp = from.first + edge.getWeight();
+                double tmp = from.first + edge.GetWeight();
                 if (dist[to] > tmp) {
                     dist[to] = tmp;
                     visited[to] = 1;
@@ -69,16 +109,17 @@ void Graph::Dijkstra(int v) {
             }
         }
     }
+    return dist;
+}
+
+void Graph::RunDijkstraThread(std::atomic<int>& n) {
+    int v;
+    while ((v = n++) < edges.size()) {
+        //std::cout << v << std::endl;
+        dists[v] = Dijkstra(v);
+    }
 }
 
 void Graph::AddEdge(int index, int vertex, double weight) {
     edges[index].insert(Edge(index, vertex, weight));
 }
-
-void Graph::Print() {
-    for (auto i : edges) {
-        for (auto j : i.second) {
-            std::cout << i.first << " " << j.getRight() << " " << j.getWeight() << std::endl;
-        }
-    }
-};

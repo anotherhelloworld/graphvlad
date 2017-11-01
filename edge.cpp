@@ -7,3 +7,8 @@ void Edge::IncTravelCount() {
 double Edge::GetTotalWeight() {
     return travelCount * weight;
 }
+
+
+bool operator==(const Edge& e, const Edge& t) {
+    return e.GetRight() == t.GetRight();
+}
