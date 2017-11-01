@@ -57,9 +57,9 @@ void Graph::Dijkstra(int v) {
     while (!q.empty()) {
         std::pair<double, int> from = q.top(); q.pop();
         for (auto edge : edges[from.second]) {
-            int to = edge.first;
+            int to = edge.getRight();
             if (!visited[to]) {
-                double tmp = from.first + edge.second;
+                double tmp = from.first + edge.getWeight();
                 if (dist[to] > tmp) {
                     dist[to] = tmp;
                     visited[to] = 1;
@@ -72,14 +72,13 @@ void Graph::Dijkstra(int v) {
 }
 
 void Graph::AddEdge(int index, int vertex, double weight) {
-    edges[index][vertex] = weight;
+    edges[index].insert(Edge(index, vertex, weight));
 }
 
 void Graph::Print() {
     for (auto i : edges) {
         for (auto j : i.second) {
-            std::cout << j.first << " " << j.second << std::endl;
-            std::cout << i.first << " " << j.first << " " << j.second << std::endl;
+            std::cout << i.first << " " << j.getRight() << " " << j.getWeight() << std::endl;
         }
     }
 };
