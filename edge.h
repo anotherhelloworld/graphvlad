@@ -4,11 +4,12 @@ class Edge {
 public:
     Edge(int u, int v, double w) : left(u), right(v), weight(w) {}
     void incTravelCount();
-    double getTotalWeight();
-    const int getLeft() { return left; }
-    const int getRight() { return right; }
-    const double getWeight() { return weight; }
-    void setWeight(double w) { weight = w; }
+    void IncTravelCount();
+    double GetTotalWeight();
+    const int GetLeft() const { return left; }
+    const int GetRight() const { return right; }
+    const double GetWeight() const { return weight; }
+    void SetWeight(double w) { weight = w; }
 private:
     int left;
     int right;

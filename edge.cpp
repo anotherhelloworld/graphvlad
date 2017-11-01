@@ -1,9 +1,9 @@
 #include "edge.h"
 
-void Edge::incTravelCount() {
+void Edge::IncTravelCount() {
     ++travelCount;
 }
 
-double Edge::getTotalWeight() {
+double Edge::GetTotalWeight() {
     return travelCount * weight;
 }
