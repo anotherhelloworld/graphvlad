@@ -8,6 +8,8 @@
 #include <string>
 #include <atomic>
 #include <thread>
+#include <sstream>
+#include <regex>
 #include "edge.h"
 
 class Graph {
@@ -15,14 +17,15 @@ public:
     std::unordered_map <int, std::unordered_set <Edge, EdgeHash>> edges;
     Graph(std::string filename);
     void ParseLinks(std::string links);
+    void ParseLinksRegEx(std::string links);
     void Print();
     void RunDijkstraAsync();
 private:
-    static const long long inf = 2e9;
+    static const long long inf = 2e17;
     int count;
     std::vector <std::vector <double>> dists;
     std::vector <double> Dijkstra(int v);
-    void RunDijkstraThread(std::atomic<int>& n);
+    void RunDijkstraThread(int from, int len);
     void AddEdge(int index, int vertex, double weight);
 };
 

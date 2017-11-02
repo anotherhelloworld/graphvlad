@@ -49,6 +49,20 @@ void Graph::ParseLinks(std::string links) {
     out << "}" << endl;
 }
 
+void Graph::ParseLinksRegEx(std::string links) {
+    ifstream in(links);
+    ofstream out("graph.dot");
+    out << "graph test {" << std::endl;
+    string cur;
+    std::regex e{ "(\\d+).*?(\\d+).*?(\\d+).*\\S" };
+    std::smatch m;
+    std::getline(in, cur);    
+    while (std::getline(in, cur))
+        if (std::regex_search(cur, m, e))
+            out << m[2] << " -- " << m[3] << ";" << std::endl;
+    out << "}" << std::endl;
+}
+
 void Graph::Print() {
     for (auto i : edges) {
         for (auto& j : i.second) {
@@ -59,27 +73,31 @@ void Graph::Print() {
 
 void Graph::RunDijkstraAsync() {
     std::atomic<int> n(0);
-    int threads_count = 4; //todo replace
+    int threads_count = 8; //todo replace
     dists.resize(edges.size());
     std::vector<thread> threads;
-    for (int i = 0; i < threads_count; ++i)
-        threads.push_back(thread(&Graph::RunDijkstraThread, this, std::ref(n)));
+    int batch = edges.size() / threads_count;
+    int remainder = edges.size() % threads_count;
+    for (int i = 0; i < threads_count - 1; ++i)
+        threads.push_back(thread(&Graph::RunDijkstraThread, this, i * batch, batch));
+    threads.push_back(thread(&Graph::RunDijkstraThread, this, (threads_count - 1) * batch, batch + remainder));
     for (int i = 0; i < threads_count; ++i)
         threads[i].join();
 
     double sum = 0;
-    //std::ofstream out("dists.out");
-    FILE* output = fopen("dist.out", "w");
+    ////std::ofstream out("dists.out");
+    //FILE* output = fopen("dist.out", "w");
     for (auto i : dists) {
         for (auto j : i) {
-            fprintf(output, "%lf ", j); // fprintf faster
+            //fprintf(output, "%lf ", j); // fprintf faster            
             if (j != inf)
                 sum += j;
             //out << j << " ";
         }
-        fprintf(output, "\n");
+        //fprintf(output, "\n");
         //out << std::endl;
     }
+    /*fclose(output);*/
     std::cout << sum << std::endl;
 }
 
@@ -112,12 +130,9 @@ vector<double> Graph::Dijkstra(int v) {
     return dist;
 }
 
-void Graph::RunDijkstraThread(std::atomic<int>& n) {
-    int v;
-    while ((v = n++) < edges.size()) {
-        //std::cout << v << std::endl;
-        dists[v] = Dijkstra(v);
-    }
+void Graph::RunDijkstraThread(int from, int len) {
+    for(int i = from; i < from + len; ++i)
+        dists[i] = Dijkstra(i);
 }
 
 void Graph::AddEdge(int index, int vertex, double weight) {
