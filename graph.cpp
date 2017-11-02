@@ -54,7 +54,7 @@ void Graph::ParseLinksRegEx(std::string links) {
     ofstream out("graph.dot");
     out << "graph test {" << std::endl;
     string cur;
-    std::regex e{ "(\\d+).*?(\\d+).*?(\\d+).*\\S" };
+    std::regex e{ "(\\d+).*?\\t(\\d+)\\t.*?(\\d+).*\\S" };
     std::smatch m;
     std::getline(in, cur);    
     while (std::getline(in, cur))
