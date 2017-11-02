@@ -19,7 +19,7 @@ private:
 };
 
 struct EdgeHash {
-    size_t operator()(const Edge& e) const {
+    unsigned int operator()(const Edge& e) const {
         return std::hash<int>()(e.GetRight());
     }
 };
