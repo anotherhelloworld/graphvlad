@@ -4,9 +4,10 @@ using namespace std;
 
 int main(int argc, char* argv[]) {
     //Graph graph(argv[1]);
-    Graph graph("vlad-2009.dat");
-    //graph.RunDijkstraAsync();
-    graph.ParseLinksRegEx("vl-grand\\links.txt");
+    //Graph graph("vlad-2009.dat");
+    Graph graph("vl-grand.dat");
+    //graph.ParseLinksRegEx("vl-grand/links.txt");
+    graph.RunDijkstraAsync();    
     //graph.Print();
     //graph.ParseLinks("links.txt");
     return 0;

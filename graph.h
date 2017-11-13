@@ -23,6 +23,7 @@ public:
 private:
     static const long long inf = 2e17;
     int count;
+    std::unordered_map<int, int> coord; //todo rename
     std::vector <std::vector <double>> dists;
     std::vector <double> Dijkstra(int v);
     void RunDijkstraThread(int from, int len);

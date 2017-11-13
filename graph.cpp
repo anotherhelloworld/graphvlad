@@ -6,17 +6,35 @@ using namespace std;
 //Public methods
 
 Graph::Graph(std::string filename) {
-    std::ifstream in(filename);
-    int count = 1653;
-    int index, vertex;
-    double weight;
-    for (int i = 0; i < count; i++) {
-        in >> index >> vertex >> weight;
-        --index;
-        --vertex;
-        AddEdge(index, vertex, weight);
-        AddEdge(vertex, index, weight);
+    if (filename != "") {
+        std::ifstream in(filename);
+        //int count = 1653;
+        int index, vertex;
+        double weight;
+        int n = 0;
+        while (!in.eof()) {
+            int v;
+            int u;
+            in >> index >> vertex >> weight;
+            if (coord.find(index) != coord.end()) {
+                v = coord[index];
+            }
+            else {
+                v = n++;
+                coord.insert(std::make_pair(index, v));
+            }
+            if (coord.find(vertex) != coord.end()) {
+                u = coord[vertex];
+            }
+            else {
+                u = n++;
+                coord.insert(std::make_pair(vertex, u));
+            }
+            AddEdge(u, v, weight);
+            AddEdge(v, u, weight);
+        }
     }
+    int k = 0;
 }
 
 void Graph::ParseLinks(std::string links) {
@@ -51,16 +69,21 @@ void Graph::ParseLinks(std::string links) {
 
 void Graph::ParseLinksRegEx(std::string links) {
     ifstream in(links);
-    ofstream out("graph.dot");
-    out << "graph test {" << std::endl;
+    ofstream out("vl-grand.dat");
+    //out << "graph test {" << std::endl;
     string cur;
-    std::regex e{ "(\\d+).*?\\t(\\d+)\\t.*?(\\d+).*\\S" };
+    std::regex e{ "(\\d+).*?\\t(\\d+)\\t.*?(\\d+).*?(\\d+\\.?\\d*).*\\S" };
     std::smatch m;
     std::getline(in, cur);    
+    int count = 0;
     while (std::getline(in, cur))
-        if (std::regex_search(cur, m, e))
-            out << m[2] << " -- " << m[3] << ";" << std::endl;
-    out << "}" << std::endl;
+        if (std::regex_search(cur, m, e)) {
+            //cout << count++ << endl;
+            out << m[2] << " " << m[3] << " " << m[4] << "\n";
+            //AddEdge(stoi(m[3]) - 1, stoi(m[2]) - 1, stod(m[4]));
+            //AddEdge(stoi(m[2]) - 1, stoi(m[3]) - 1, stod(m[4]));
+        }
+    //out << "}" << std::endl;
 }
 
 void Graph::Print() {
@@ -78,11 +101,14 @@ void Graph::RunDijkstraAsync() {
     std::vector<thread> threads;
     int batch = edges.size() / threads_count;
     int remainder = edges.size() % threads_count;
+    //auto t1 = std::chrono::high_resolution_clock::now();                                           //time evaluation
     for (int i = 0; i < threads_count - 1; ++i)
         threads.push_back(thread(&Graph::RunDijkstraThread, this, i * batch, batch));
     threads.push_back(thread(&Graph::RunDijkstraThread, this, (threads_count - 1) * batch, batch + remainder));
     for (int i = 0; i < threads_count; ++i)
         threads[i].join();
+    //auto t2 = std::chrono::high_resolution_clock::now();                                           //time evaluation
+    //cout << chrono::duration_cast<std::chrono::microseconds>(t2-t1).count() / 1e6 << " seconds\n"; //time evaluation
 
     double sum = 0;
     ////std::ofstream out("dists.out");
@@ -97,7 +123,7 @@ void Graph::RunDijkstraAsync() {
         //fprintf(output, "\n");
         //out << std::endl;
     }
-    /*fclose(output);*/
+    //fclose(output);
     std::cout << sum << std::endl;
 }
 
