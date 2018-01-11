@@ -1,3 +1,2 @@
-report.log
-report.pdf
-report.aux
+report.*
+!report.tex
