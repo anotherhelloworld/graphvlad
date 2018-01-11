@@ -8,7 +8,6 @@ using namespace std;
 Graph::Graph(std::string filename) {
     if (filename != "") {
         std::ifstream in(filename);
-        //int count = 1653;
         int index, vertex;
         double weight;
         int n = 0;
@@ -33,38 +32,17 @@ Graph::Graph(std::string filename) {
             AddEdge(u, v, weight);
             AddEdge(v, u, weight);
         }
-    }
-    int k = 0;
-}
 
-void Graph::ParseLinks(std::string links) {
-    ifstream in(links);
-    ofstream out("graph.dot");
-    out << "graph test {" << endl;
-    string cur;
-    getline(in, cur);
-    while (getline(in, cur)) {
-        cout << cur << endl;
-        int link;
-        int aNode;
-        int bNode;
-        int tabCount = 0;
-        vector<int> tabs(5);
-        int pos = 0;
-        while (tabCount <= 4) {
-            if (cur[pos] == '\t') {
-                tabs[tabCount] = pos;
-                cout << pos << endl;
-                ++tabCount;
-            }
-            ++pos;
+        for (auto &i : coord) {
+            coord_to_vertecies[i.second] = i.first;
         }
-        link = stoi(cur.substr(0, tabs[0]));
-        aNode = stoi(cur.substr(tabs[1], tabs[2] - tabs[1]));
-        bNode = stoi(cur.substr(tabs[2], tabs[3] - tabs[2]));
-        out << aNode << " -- " << bNode << ";" << endl;
     }
-    out << "}" << endl;
+    //buff.resize(edges.size(), inf);
+    dists.resize(edges.size());
+    oldDists.resize(edges.size());
+    for (auto &i : edges) 
+        for (auto &j : i.second) 
+            dists[i.first][j.GetRight()] = inf;
 }
 
 void Graph::ParseLinksRegEx(std::string links) {
@@ -74,7 +52,7 @@ void Graph::ParseLinksRegEx(std::string links) {
     string cur;
     std::regex e{ "(\\d+).*?\\t(\\d+)\\t.*?(\\d+).*?(\\d+\\.?\\d*).*\\S" };
     std::smatch m;
-    std::getline(in, cur);    
+    std::getline(in, cur);
     int count = 0;
     while (std::getline(in, cur))
         if (std::regex_search(cur, m, e)) {
@@ -87,17 +65,21 @@ void Graph::ParseLinksRegEx(std::string links) {
 }
 
 void Graph::Print() {
-    for (auto i : edges) {
+    for (auto &i : edges) {
         for (auto& j : i.second) {
             std::cout << i.first << " " << j.GetRight() << " " << j.GetWeight() << std::endl;
         }
     }
 }
 
-void Graph::RunDijkstraAsync() {
+double Graph::RunDijkstraAsync() {
     std::atomic<int> n(0);
     int threads_count = 8; //todo replace
-    dists.resize(edges.size());
+
+    for (auto &i : edges)
+        for (auto &j : i.second)
+            dists[i.first][j.GetRight()] = inf;
+
     std::vector<thread> threads;
     int batch = edges.size() / threads_count;
     int remainder = edges.size() % threads_count;
@@ -111,32 +93,84 @@ void Graph::RunDijkstraAsync() {
     //cout << chrono::duration_cast<std::chrono::microseconds>(t2-t1).count() / 1e6 << " seconds\n"; //time evaluation
 
     double sum = 0;
-    ////std::ofstream out("dists.out");
-    //FILE* output = fopen("dist.out", "w");
-    for (auto i : dists) {
-        for (auto j : i) {
-            //fprintf(output, "%lf ", j); // fprintf faster            
-            if (j != inf)
-                sum += j;
-            //out << j << " ";
-        }
-        //fprintf(output, "\n");
-        //out << std::endl;
+    for (auto &i : dists) {
+        for (auto &j : i) {
+            sum += j.second;
+        }        
     }
-    //fclose(output);
-    std::cout << sum << std::endl;
+    return sum;
+}
+
+void Graph::FindCriticalEdge(double k) {
+    Edge* critical = nullptr;
+    int size = edges.size();
+    int count = 0;
+    double distances = 0;
+    if (k >= 0.0 && k <= 1.0) {
+        double min = DBL_MAX;
+        for (auto &v : edges) {
+            cout << count++ << " out of " << size << endl;
+            for (auto &edge : v.second) {
+                double PrevWeight = edge.GetWeight();
+                ((Edge&)edge).SetWeight(PrevWeight*k);
+                double sum = RunDijkstraAsync();
+                if (min > sum) {
+                    min = sum;
+                    distances = min;
+                    critical = &((Edge&)edge);
+                }
+                ((Edge&)edge).SetWeight(PrevWeight);
+            }
+        }
+    }
+    else if (k >= 1.0) {
+
+    }
+    else {
+
+    }
+    if (critical != nullptr) {
+        cout << "New distances: " << distances << ". With edge between ";
+        cout << coord_to_vertecies[critical->GetLeft()] << " and " << coord_to_vertecies[critical->GetRight()] << ". Weight: " << critical->GetWeight() << endl;
+    }
 }
 
 //Private methods
 
-vector<double> Graph::Dijkstra(int v) {
-    std::vector<double> dist(edges.size(), inf);
-    std::vector<int> visited(edges.size(), 0);
-    std::vector<int> path(edges.size(), -1);
-    dist[v] = 0;
+void Graph::Dijkstra(int v) {
+    //std::vector<double> dist(edges.size(), inf);
+    std::vector<bool> visited(edges.size(), false);
+    //std::vector<int> path(edges.size(), -1);
+    dists[v][v] = 0.0;
     std::priority_queue<std::pair<double, int>, std::vector<std::pair<double, int>>, Compare> q;
-    visited[v] = 1;
-    q.push(std::make_pair(dist[v], v));
+    visited[v] = true;
+    q.push(std::make_pair(dists[v][v], v));
+
+    while (!q.empty()) {
+        std::pair<double, int> from = q.top(); q.pop();
+        for (auto& edge : edges[from.second]) {
+            int to = edge.GetRight();
+            if (!visited[to]) {
+                double tmp = from.first + edge.GetWeight();
+                if (dists[v][to] > tmp) {
+                    dists[v][to] = tmp;
+                    visited[to] = false;
+                    //path[to] = from.second;
+                    q.push(std::make_pair(dists[v][to], to));
+                }
+            }
+        }
+    }
+}
+
+std::vector<double> Graph::oldDijksra(int v) {
+    std::vector<double> dist(edges.size(), inf);
+    std::vector<bool> visited(edges.size(), false);
+    //std::vector<int> path(edges.size(), -1);
+    dist[v] = 0.0;
+    std::priority_queue<std::pair<double, int>, std::vector<std::pair<double, int>>, Compare> q;
+    visited[v] = true;
+    q.push(std::make_pair(dists[v][v], v));
 
     while (!q.empty()) {
         std::pair<double, int> from = q.top(); q.pop();
@@ -146,8 +180,8 @@ vector<double> Graph::Dijkstra(int v) {
                 double tmp = from.first + edge.GetWeight();
                 if (dist[to] > tmp) {
                     dist[to] = tmp;
-                    visited[to] = 1;
-                    path[to] = from.second;
+                    visited[to] = false;
+                    //path[to] = from.second;
                     q.push(std::make_pair(dist[to], to));
                 }
             }
@@ -157,8 +191,13 @@ vector<double> Graph::Dijkstra(int v) {
 }
 
 void Graph::RunDijkstraThread(int from, int len) {
-    for(int i = from; i < from + len; ++i)
-        dists[i] = Dijkstra(i);
+    for (int i = from; i < from + len; ++i)
+        Dijkstra(i);
+}
+
+void Graph::OldRunDijkstraThread(int from, int len) {
+    for (int i = from; i < from + len; ++i)
+        oldDists[i] =  oldDijksra(i);
 }
 
 void Graph::AddEdge(int index, int vertex, double weight) {
