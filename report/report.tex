@@ -1,6 +1,7 @@
 \documentclass[12pt]{article}
 \usepackage{graphicx}
 \usepackage{amssymb}
+\usepackage{listings}
 
 % Russian specicfic
 % -------------------------
@@ -44,8 +45,7 @@ $W(e^*) \rightarrow \gamma W(e^*)$ сумма сетевых
 
 \paragraph{}
 Для нахождения суммы сетевых расстояний в графе использовался
-алгоритм Дейкстры. Чтобы ускорить исполнение программы, из каждой
-вершины алгоритм Дейкстры запускался в отдельном потоке.
+алгоритм Дейкстры\cite{dijkstra}.
 
 \paragraph{}
 Чтобы найти критическое ребро сумма сетевых расстояний считается
@@ -55,12 +55,58 @@ $W(e^*) \rightarrow \gamma W(e^*)$ сумма сетевых
 на критическое. В конце работы алгоритма мы получаем критическое ребро.
 
 \section{Реализация}
-Отличная
+
+\paragraph{}
+Алгоритм реализован на языке C++. Основной процедурой является
+алгоритм Дейкстры\cite{dijkstra}.
+
+% \newpage
+
+\begin{lstlisting}[language=C++]
+void Graph::Dijkstra(int v) {
+    std::vector<bool> visited(edges.size(), false);
+    dists[v][v] = 0.0;
+    std::priority_queue<
+      std::pair<double, int>,
+      std::vector<std::pair<double, int>>, Compare> q;
+    visited[v] = true;
+    q.push(std::make_pair(dists[v][v], v));
+
+    while (!q.empty()) {
+        std::pair<double, int> from = q.top();
+        q.pop();
+        for (auto& edge : edges[from.second]) {
+            int to = edge.GetRight();
+            if (!visited[to]) {
+                double tmp = from.first + edge.GetWeight();
+                if (dists[v][to] > tmp) {
+                    dists[v][to] = tmp;
+                    visited[to] = false;
+                    q.push(std::make_pair(dists[v][to], to));
+                }
+            }
+        }
+    }
+}
+\end{lstlisting}
+
+\paragraph{Оптимизации:}
+Чтобы ускорить исполнение программы, из каждой
+вершины алгоритм Дейкстры запускался в отдельном
+потоке. Т.к. граф разрежен в памяти он хранится в
+виде списка смежности.
 
 \section{Результаты}
 Хорошие
 
 \section{Заключение}
 Окончательное и обжалованию не подлежит
+
+\begin{thebibliography}{9}
+\bibitem{dijkstra}
+Dijkstra E. W. \textit{A note on two problems in connexion with graphs} //
+\textit{Numer. Math} — Springer Science+Business Media, 1959.
+— Vol. 1, Iss. 1. — P. 269–271.
+\end{thebibliography}
 
 \end{document}
