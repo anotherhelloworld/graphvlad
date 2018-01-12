@@ -152,10 +152,10 @@ void Graph::Dijkstra(int v) {
             int to = edge.GetRight();
             if (!visited[to]) {
                 double tmp = from.first + edge.GetWeight();
-                if (dists[v][to] > tmp) {
+                auto it = dists[v].find(to);
+                if (it == dists[v].end() || it->second > tmp) {
                     dists[v][to] = tmp;
                     visited[to] = false;
-                    //path[to] = from.second;
                     q.push(std::make_pair(dists[v][to], to));
                 }
             }
