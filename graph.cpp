@@ -39,10 +39,12 @@ Graph::Graph(std::string filename) {
     }
     //buff.resize(edges.size(), inf);
     dists.resize(edges.size());
+    for (int i = 0; i < edges.size(); ++i)
+        Dijkstra(i);
     oldDists.resize(edges.size());
-    for (auto &i : edges) 
-        for (auto &j : i.second) 
-            dists[i.first][j.GetRight()] = inf;
+    //for (auto &i : edges) 
+    //    for (auto &j : i.second) 
+    //        dists[i.first][j.GetRight()] = inf;
 }
 
 void Graph::ParseLinksRegEx(std::string links) {
@@ -76,9 +78,9 @@ double Graph::RunDijkstraAsync() {
     std::atomic<int> n(0);
     int threads_count = 8; //todo replace
 
-    for (auto &i : edges)
-        for (auto &j : i.second)
-            dists[i.first][j.GetRight()] = inf;
+    for (int i = 0; i < dists.size(); ++i)
+        for (auto &j : dists[i])
+            j.second = inf;
 
     std::vector<thread> threads;
     int batch = edges.size() / threads_count;
@@ -112,19 +114,41 @@ void Graph::FindCriticalEdge(double k) {
             cout << count++ << " out of " << size << endl;
             for (auto &edge : v.second) {
                 double PrevWeight = edge.GetWeight();
+                edges[edge.GetRight()].erase(Edge(0, edge.GetLeft(), 0));
+                edges[edge.GetRight()].insert(Edge(edge.GetRight(), edge.GetLeft(), PrevWeight*k));
                 ((Edge&)edge).SetWeight(PrevWeight*k);
                 double sum = RunDijkstraAsync();
                 if (min > sum) {
                     min = sum;
-                    distances = min;
                     critical = &((Edge&)edge);
                 }
                 ((Edge&)edge).SetWeight(PrevWeight);
+                edges[edge.GetRight()].erase(Edge(0, edge.GetLeft(), 0));
+                edges[edge.GetRight()].insert(Edge(edge.GetRight(), edge.GetLeft(), PrevWeight));
             }
         }
+        distances = min;
     }
     else if (k >= 1.0) {
-
+        double max = 0;
+        for (auto &v : edges) {
+            cout << count++ << " out of " << size << endl;
+            for (auto &edge : v.second) {
+                double PrevWeight = edge.GetWeight();
+                edges[edge.GetRight()].erase(Edge(0, edge.GetLeft(), 0));
+                edges[edge.GetRight()].insert(Edge(edge.GetRight(), edge.GetLeft(), PrevWeight*k));
+                ((Edge&)edge).SetWeight(PrevWeight*k);
+                double sum = RunDijkstraAsync();
+                if (max < sum) {
+                    max = sum;
+                    critical = &((Edge&)edge);
+                }
+                ((Edge&)edge).SetWeight(PrevWeight);
+                edges[edge.GetRight()].erase(Edge(0, edge.GetLeft(), 0));
+                edges[edge.GetRight()].insert(Edge(edge.GetRight(), edge.GetLeft(), PrevWeight));
+            }
+        }
+        distances = max;
     }
     else {
 
