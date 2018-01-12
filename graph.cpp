@@ -41,7 +41,7 @@ Graph::Graph(std::string filename) {
     dists.resize(edges.size());
     for (int i = 0; i < edges.size(); ++i)
         Dijkstra(i);
-    oldDists.resize(edges.size());
+    //oldDists.resize(edges.size());
     //for (auto &i : edges) 
     //    for (auto &j : i.second) 
     //        dists[i.first][j.GetRight()] = inf;
@@ -104,7 +104,9 @@ double Graph::RunDijkstraAsync() {
 }
 
 void Graph::FindCriticalEdge(double k) {
-    Edge* critical = nullptr;
+    //Edge* critical = nullptr;
+    int criticalLeft = -1;
+    int criticalRight = -1;
     int size = edges.size();
     int count = 0;
     double distances = 0;
@@ -120,7 +122,9 @@ void Graph::FindCriticalEdge(double k) {
                 double sum = RunDijkstraAsync();
                 if (min > sum) {
                     min = sum;
-                    critical = &((Edge&)edge);
+                    criticalLeft = edge.GetLeft();
+                    criticalRight = edge.GetRight();
+                    //critical = &((Edge&)edge);
                 }
                 ((Edge&)edge).SetWeight(PrevWeight);
                 edges[edge.GetRight()].erase(Edge(0, edge.GetLeft(), 0));
@@ -141,7 +145,8 @@ void Graph::FindCriticalEdge(double k) {
                 double sum = RunDijkstraAsync();
                 if (max < sum) {
                     max = sum;
-                    critical = &((Edge&)edge);
+                    criticalLeft = edge.GetLeft();
+                    criticalRight = edge.GetRight();
                 }
                 ((Edge&)edge).SetWeight(PrevWeight);
                 edges[edge.GetRight()].erase(Edge(0, edge.GetLeft(), 0));
@@ -153,9 +158,10 @@ void Graph::FindCriticalEdge(double k) {
     else {
 
     }
-    if (critical != nullptr) {
+    if (criticalLeft != -1 && criticalRight != -1) {
+        auto edge = edges[criticalLeft].find(Edge(0, criticalRight, 0));
         cout << "New distances: " << distances << ". With edge between ";
-        cout << coord_to_vertecies[critical->GetLeft()] << " and " << coord_to_vertecies[critical->GetRight()] << ". Weight: " << critical->GetWeight() << endl;
+        cout << coord_to_vertecies[edge->GetLeft()] << " and " << coord_to_vertecies[edge->GetRight()] << ". Weight: " << edge->GetWeight() << endl;
     }
 }
 
