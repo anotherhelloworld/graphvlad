@@ -5,7 +5,13 @@ using namespace std;
 
 //Public methods
 
+Graph::Graph() { }
+
 Graph::Graph(std::string filename) {
+    open(filename);
+}
+
+void Graph::open(std::string filename) {
     if (filename != "") {
         std::ifstream in(filename);
         int index, vertex;
@@ -39,10 +45,12 @@ Graph::Graph(std::string filename) {
     }
     //buff.resize(edges.size(), inf);
     dists.resize(edges.size());
-    oldDists.resize(edges.size());
-    for (auto &i : edges) 
-        for (auto &j : i.second) 
-            dists[i.first][j.GetRight()] = inf;
+    for (int i = 0; i < edges.size(); ++i)
+        Dijkstra(i);
+    //oldDists.resize(edges.size());
+    //for (auto &i : edges) 
+    //    for (auto &j : i.second) 
+    //        dists[i.first][j.GetRight()] = inf;
 }
 
 void Graph::ParseLinksRegEx(std::string links) {
@@ -76,9 +84,9 @@ double Graph::RunDijkstraAsync() {
     std::atomic<int> n(0);
     int threads_count = 8; //todo replace
 
-    for (auto &i : edges)
-        for (auto &j : i.second)
-            dists[i.first][j.GetRight()] = inf;
+    for (int i = 0; i < dists.size(); ++i)
+        for (auto &j : dists[i])
+            j.second = inf;
 
     std::vector<thread> threads;
     int batch = edges.size() / threads_count;
@@ -102,7 +110,9 @@ double Graph::RunDijkstraAsync() {
 }
 
 void Graph::FindCriticalEdge(double k) {
-    Edge* critical = nullptr;
+    //Edge* critical = nullptr;
+    int criticalLeft = -1;
+    int criticalRight = -1;
     int size = edges.size();
     int count = 0;
     double distances = 0;
@@ -112,26 +122,52 @@ void Graph::FindCriticalEdge(double k) {
             cout << count++ << " out of " << size << endl;
             for (auto &edge : v.second) {
                 double PrevWeight = edge.GetWeight();
+                edges[edge.GetRight()].erase(Edge(0, edge.GetLeft(), 0));
+                edges[edge.GetRight()].insert(Edge(edge.GetRight(), edge.GetLeft(), PrevWeight*k));
                 ((Edge&)edge).SetWeight(PrevWeight*k);
                 double sum = RunDijkstraAsync();
                 if (min > sum) {
                     min = sum;
-                    distances = min;
-                    critical = &((Edge&)edge);
+                    criticalLeft = edge.GetLeft();
+                    criticalRight = edge.GetRight();
+                    //critical = &((Edge&)edge);
                 }
                 ((Edge&)edge).SetWeight(PrevWeight);
+                edges[edge.GetRight()].erase(Edge(0, edge.GetLeft(), 0));
+                edges[edge.GetRight()].insert(Edge(edge.GetRight(), edge.GetLeft(), PrevWeight));
             }
         }
+        distances = min;
     }
     else if (k >= 1.0) {
-
+        double max = 0;
+        for (auto &v : edges) {
+            cout << count++ << " out of " << size << endl;
+            for (auto &edge : v.second) {
+                double PrevWeight = edge.GetWeight();
+                edges[edge.GetRight()].erase(Edge(0, edge.GetLeft(), 0));
+                edges[edge.GetRight()].insert(Edge(edge.GetRight(), edge.GetLeft(), PrevWeight*k));
+                ((Edge&)edge).SetWeight(PrevWeight*k);
+                double sum = RunDijkstraAsync();
+                if (max < sum) {
+                    max = sum;
+                    criticalLeft = edge.GetLeft();
+                    criticalRight = edge.GetRight();
+                }
+                ((Edge&)edge).SetWeight(PrevWeight);
+                edges[edge.GetRight()].erase(Edge(0, edge.GetLeft(), 0));
+                edges[edge.GetRight()].insert(Edge(edge.GetRight(), edge.GetLeft(), PrevWeight));
+            }
+        }
+        distances = max;
     }
     else {
 
     }
-    if (critical != nullptr) {
+    if (criticalLeft != -1 && criticalRight != -1) {
+        auto edge = edges[criticalLeft].find(Edge(0, criticalRight, 0));
         cout << "New distances: " << distances << ". With edge between ";
-        cout << coord_to_vertecies[critical->GetLeft()] << " and " << coord_to_vertecies[critical->GetRight()] << ". Weight: " << critical->GetWeight() << endl;
+        cout << coord_to_vertecies[edge->GetLeft()] << " and " << coord_to_vertecies[edge->GetRight()] << ". Weight: " << edge->GetWeight() << endl;
     }
 }
 
