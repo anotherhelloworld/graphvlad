@@ -39,20 +39,10 @@ void Graph::open(std::string filename) {
             AddEdge(v, u, weight);
         }
 
-        for (auto &i : coord) {
+        for (auto &i : coord)
             coord_to_vertecies[i.second] = i.first;
-        }
     }
-    //buff.resize(edges.size(), inf);   
-    //dists.resize(edges.size());
-    
-    //for (int i = 0; i < edges.size(); ++i)
-    //    Dijkstra(i);
-    //oldDists.resize(edges.size());
-    distSum.resize(edges.size());
-    //for (auto &i : edges) 
-    //    for (auto &j : i.second) 
-    //        dists[i.first][j.GetRight()] = inf;
+    distSum.resize(edges.size(), 0);
 }
 
 void Graph::ParseLinksRegEx(std::string links) {
@@ -66,10 +56,7 @@ void Graph::ParseLinksRegEx(std::string links) {
     int count = 0;
     while (std::getline(in, cur))
         if (std::regex_search(cur, m, e)) {
-            //cout << count++ << endl;
             out << m[2] << " " << m[3] << " " << m[4] << "\n";
-            //AddEdge(stoi(m[3]) - 1, stoi(m[2]) - 1, stod(m[4]));
-            //AddEdge(stoi(m[2]) - 1, stoi(m[3]) - 1, stod(m[4]));
         }
     //out << "}" << std::endl;
 }
@@ -83,7 +70,7 @@ void Graph::Print() {
 }
 
 double Graph::RunDijkstraAsync() {
-    std::atomic<int> n(0);
+    //std::atomic<int> n(0);
     int threads_count = 8; //todo replace
 
     std::vector<thread> threads;
@@ -95,7 +82,7 @@ double Graph::RunDijkstraAsync() {
     threads.push_back(thread(&Graph::RunDijkstraThread, this, (threads_count - 1) * batch, batch + remainder));
     for (int i = 0; i < threads_count; ++i)
         threads[i].join();
-    //auto t2 = std::chrono::high_resolution_clock::now();                                           //time evaluation
+    //auto t2 = std::chrono::high_resolution_clock::now();                                            //time evaluation
     //cout << chrono::duration_cast<std::chrono::microseconds>(t2-t1).count() / 1e6 << " seconds\n"; //time evaluation
 
     double sum = 0;
@@ -186,7 +173,7 @@ double Graph::Dijkstra(int v) {
                 if (dist[to] > tmp) {
                     dist[to] = tmp;
                     visited[to] = true;
-                    q.push(std::make_pair(dist[to], to));
+                    q.push(std::make_pair(tmp, to));
                 }
             }
         }
