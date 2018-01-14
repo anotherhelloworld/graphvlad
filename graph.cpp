@@ -119,7 +119,7 @@ void Graph::FindCriticalEdge(double k) {
     if (k >= 0.0 && k <= 1.0) {
         double min = DBL_MAX;
         for (auto &v : edges) {
-            cout << count++ << " out of " << size << endl;
+            cout << count++ << " out of " << size << flush;
             for (auto &edge : v.second) {
                 double PrevWeight = edge.GetWeight();
                 edges[edge.GetRight()].erase(Edge(0, edge.GetLeft(), 0));
@@ -136,13 +136,15 @@ void Graph::FindCriticalEdge(double k) {
                 edges[edge.GetRight()].erase(Edge(0, edge.GetLeft(), 0));
                 edges[edge.GetRight()].insert(Edge(edge.GetRight(), edge.GetLeft(), PrevWeight));
             }
+            cout << "\r";
         }
+        cout << endl;
         distances = min;
     }
     else if (k >= 1.0) {
         double max = 0;
         for (auto &v : edges) {
-            cout << count++ << " out of " << size << endl;
+            cout << count++ << " out of " << size;
             for (auto &edge : v.second) {
                 double PrevWeight = edge.GetWeight();
                 edges[edge.GetRight()].erase(Edge(0, edge.GetLeft(), 0));
@@ -158,6 +160,7 @@ void Graph::FindCriticalEdge(double k) {
                 edges[edge.GetRight()].erase(Edge(0, edge.GetLeft(), 0));
                 edges[edge.GetRight()].insert(Edge(edge.GetRight(), edge.GetLeft(), PrevWeight));
             }
+            cout << "\r";
         }
         distances = max;
     }
