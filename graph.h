@@ -8,19 +8,23 @@
 #include <string>
 #include <atomic>
 #include <thread>
+#include <pthread.h>
 #include <sstream>
 #include <regex>
 #include "edge.h"
+#include <cfloat>
 
 class Graph {
 public:
     std::unordered_map <int, std::unordered_set <Edge, EdgeHash>> edges;
+    Graph();
     Graph(std::string filename);
     void ParseLinksRegEx(std::string links);
     void Print();
     double RunDijkstraAsync();
     void FindCriticalEdge(double k);
 private:
+    void open(std::string filename);
     static const long long inf = 2e17;
     int count;
     std::unordered_map<int, int> coord; //todo rename

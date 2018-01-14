@@ -5,7 +5,13 @@ using namespace std;
 
 //Public methods
 
+Graph::Graph() { }
+
 Graph::Graph(std::string filename) {
+    open(filename);
+}
+
+void Graph::open(std::string filename) {
     if (filename != "") {
         std::ifstream in(filename);
         int index, vertex;
