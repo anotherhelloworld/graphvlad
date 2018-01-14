@@ -8,7 +8,6 @@
 #include <string>
 #include <atomic>
 #include <thread>
-#include <pthread.h>
 #include <sstream>
 #include <regex>
 #include "edge.h"
@@ -29,13 +28,9 @@ private:
     int count;
     std::unordered_map<int, int> coord; //todo rename
     std::unordered_map<int, int> coord_to_vertecies;
-    std::vector <std::unordered_map <int, double>> dists;
-    std::vector <std::vector<double>> oldDists;
-    std::vector<double> buff;
-    void Dijkstra(int v);
-    std::vector<double> oldDijksra(int v);
+    std::vector<double> distSum;
+    double Dijkstra(int v);
     void RunDijkstraThread(int from, int len);
-    void OldRunDijkstraThread(int from, int len);
     void AddEdge(int index, int vertex, double weight);
 
 };
