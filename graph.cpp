@@ -17,6 +17,7 @@ void Graph::open(std::string filename) {
         int index, vertex;
         double weight;
         int n = 0;
+        int id = 0;
         while (!in.eof()) {
             int v;
             int u;
@@ -35,8 +36,8 @@ void Graph::open(std::string filename) {
                 u = n++;
                 coord.insert(std::make_pair(vertex, u));
             }
-            AddEdge(u, v, weight);
-            AddEdge(v, u, weight);
+            AddEdge(u, v, weight, id++);
+            AddEdge(v, u, weight, id++);
         }
 
         for (auto &i : coord)
@@ -70,7 +71,6 @@ void Graph::Print() {
 }
 
 double Graph::RunDijkstraAsync() {
-    //std::atomic<int> n(0);
     int threads_count = 8; //todo replace
 
     std::vector<thread> threads;
@@ -102,19 +102,24 @@ void Graph::FindCriticalEdge(double k) {
         for (auto &v : edges) {
             cout << count++ << " out of " << size << flush;
             for (auto &edge : v.second) {
-                double PrevWeight = edge.GetWeight();
-                edges[edge.GetRight()].erase(Edge(0, edge.GetLeft(), 0));
-                edges[edge.GetRight()].insert(Edge(edge.GetRight(), edge.GetLeft(), PrevWeight*k));
-                ((Edge&)edge).SetWeight(PrevWeight*k);
-                double sum = RunDijkstraAsync();
-                if (min > sum) {
-                    min = sum;
-                    criticalLeft = edge.GetLeft();
-                    criticalRight = edge.GetRight();
+                if (usedEdges.find(edge.getId()) == usedEdges.end()) {
+                    double PrevWeight = edge.GetWeight();
+                    auto it = edges[edge.GetRight()].find(Edge(0, edge.GetLeft(), 0, 0));
+                    int invId = it->getId();
+                    usedEdges.insert(invId);
+                    edges[edge.GetRight()].erase(it);
+                    edges[edge.GetRight()].insert(Edge(edge.GetRight(), edge.GetLeft(), PrevWeight*k, invId));
+                    ((Edge&)edge).SetWeight(PrevWeight*k);
+                    double sum = RunDijkstraAsync();
+                    if (min > sum) {
+                        min = sum;
+                        criticalLeft = edge.GetLeft();
+                        criticalRight = edge.GetRight();
+                    }
+                    ((Edge&)edge).SetWeight(PrevWeight);
+                    edges[edge.GetRight()].erase(Edge(0, edge.GetLeft(), 0, 0));
+                    edges[edge.GetRight()].insert(Edge(edge.GetRight(), edge.GetLeft(), PrevWeight, invId));
                 }
-                ((Edge&)edge).SetWeight(PrevWeight);
-                edges[edge.GetRight()].erase(Edge(0, edge.GetLeft(), 0));
-                edges[edge.GetRight()].insert(Edge(edge.GetRight(), edge.GetLeft(), PrevWeight));
             }
             cout << "\r";
         }
@@ -124,21 +129,26 @@ void Graph::FindCriticalEdge(double k) {
     else if (k >= 1.0) {
         double max = 0;
         for (auto &v : edges) {
-            cout << count++ << " out of " << size;
+            cout << count++ << " out of " << size << flush;
             for (auto &edge : v.second) {
-                double PrevWeight = edge.GetWeight();
-                edges[edge.GetRight()].erase(Edge(0, edge.GetLeft(), 0));
-                edges[edge.GetRight()].insert(Edge(edge.GetRight(), edge.GetLeft(), PrevWeight*k));
-                ((Edge&)edge).SetWeight(PrevWeight*k);
-                double sum = RunDijkstraAsync();
-                if (max < sum) {
-                    max = sum;
-                    criticalLeft = edge.GetLeft();
-                    criticalRight = edge.GetRight();
+                if (usedEdges.find(edge.getId()) == usedEdges.end()) {
+                    double PrevWeight = edge.GetWeight();
+                    auto it = edges[edge.GetRight()].find(Edge(0, edge.GetLeft(), 0, 0));
+                    int invId = it->getId();
+                    usedEdges.insert(invId);
+                    edges[edge.GetRight()].erase(it);
+                    edges[edge.GetRight()].insert(Edge(edge.GetRight(), edge.GetLeft(), PrevWeight*k, invId));
+                    ((Edge&)edge).SetWeight(PrevWeight*k);
+                    double sum = RunDijkstraAsync();
+                    if (max < sum) {
+                        max = sum;
+                        criticalLeft = edge.GetLeft();
+                        criticalRight = edge.GetRight();
+                    }
+                    ((Edge&)edge).SetWeight(PrevWeight);
+                    edges[edge.GetRight()].erase(Edge(0, edge.GetLeft(), 0, 0));
+                    edges[edge.GetRight()].insert(Edge(edge.GetRight(), edge.GetLeft(), PrevWeight, invId));
                 }
-                ((Edge&)edge).SetWeight(PrevWeight);
-                edges[edge.GetRight()].erase(Edge(0, edge.GetLeft(), 0));
-                edges[edge.GetRight()].insert(Edge(edge.GetRight(), edge.GetLeft(), PrevWeight));
             }
             cout << "\r";
         }
@@ -148,7 +158,7 @@ void Graph::FindCriticalEdge(double k) {
 
     }
     if (criticalLeft != -1 && criticalRight != -1) {
-        auto edge = edges[criticalLeft].find(Edge(0, criticalRight, 0));
+        auto edge = edges[criticalLeft].find(Edge(0, criticalRight, 0, 0));
         cout << "New distances: " << distances << ". With edge between ";
         cout << coord_to_vertecies[edge->GetLeft()] << " and " << coord_to_vertecies[edge->GetRight()] << ". Weight: " << edge->GetWeight() << endl;
     }
@@ -190,6 +200,6 @@ void Graph::RunDijkstraThread(int from, int len) {
         distSum[i] = Dijkstra(i);
 }
 
-void Graph::AddEdge(int index, int vertex, double weight) {
-    edges[index].insert(Edge(index, vertex, weight));
+void Graph::AddEdge(int index, int vertex, double weight, int id) {
+    edges[index].insert(Edge(index, vertex, weight, id));
 }

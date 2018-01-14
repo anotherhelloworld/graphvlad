@@ -25,13 +25,14 @@ public:
     void FindCriticalEdge(double k);
 private:
     static const long long inf = 2e17;
-    int count;
+    //int count;
     std::unordered_map<int, int> coord; //todo rename
     std::unordered_map<int, int> coord_to_vertecies;
+    std::unordered_set<int> usedEdges;
     std::vector<double> distSum;
     double Dijkstra(int v);
     void RunDijkstraThread(int from, int len);
-    void AddEdge(int index, int vertex, double weight);
+    void AddEdge(int index, int vertex, double weight, int id);
 
 };
 
