@@ -19,12 +19,12 @@ public:
     std::unordered_map <int, std::unordered_set <Edge, EdgeHash>> edges;
     Graph();
     Graph(std::string filename);
+    void open(std::string filename);
     void ParseLinksRegEx(std::string links);
     void Print();
     double RunDijkstraAsync();
     void FindCriticalEdge(double k);
 private:
-    void open(std::string filename);
     static const long long inf = 2e17;
     int count;
     std::unordered_map<int, int> coord; //todo rename
