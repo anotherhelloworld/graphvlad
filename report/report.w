@@ -69,35 +69,40 @@ $W(e^*) \rightarrow \gamma W(e^*)$ сумма сетевых
 Алгоритм реализован на языке C++. Основной процедурой является
 алгоритм Дейкстры\cite{dijkstra}.
 
-% \newpage
 
-\begin{lstlisting}[language=C++]
-void Graph::Dijkstra(int v) {
-    std::vector<bool> visited(edges.size(), false);
-    dists[v][v] = 0.0;
-    std::priority_queue<
-      std::pair<double, int>,
-      std::vector<std::pair<double, int>>, Compare> q;
-    visited[v] = true;
-    q.push(std::make_pair(dists[v][v], v));
+\subsection{Исходный код}
+\paragragh{}
+Приправа
+@o edge.h @{
+#pragma once
+#include <atomic>
+#include <functional>
 
-    while (!q.empty()) {
-        std::pair<double, int> from = q.top();
-        q.pop();
-        for (auto& edge : edges[from.second]) {
-            int to = edge.GetRight();
-            if (!visited[to]) {
-                double tmp = from.first + edge.GetWeight();
-                if (dists[v][to] > tmp) {
-                    dists[v][to] = tmp;
-                    visited[to] = false;
-                    q.push(std::make_pair(dists[v][to], to));
-                }
-            }
-        }
+class Edge {
+public:
+    Edge(const Edge& e) :left(e.left), right(e.right), weight(e.weight), travelCount(0) {} //todo check how to fix travelCount(e.travelCount)
+    Edge(int u, int v, double w) : left(u), right(v), weight(w), travelCount(0) {}
+    void IncTravelCount();
+    double GetTotalWeight();
+    const int GetLeft() const { return left; }
+    const int GetRight() const { return right; }
+    const double GetWeight() const { return weight; }
+    void SetWeight(double w) { weight = w; }
+private:
+    int left;
+    int right;
+    double weight;
+    std::atomic<int> travelCount;
+};
+
+struct EdgeHash {
+    unsigned int operator()(const Edge& e) const {
+        return std::hash<int>()(e.GetRight());
     }
-}
-\end{lstlisting}
+};
+
+bool operator==(const Edge& e, const Edge& t);
+@}
 
 \paragraph{Оцена вычислительной сложности алгоритма.}
 

@@ -84,36 +84,54 @@ $W(e^*) \rightarrow \gamma W(e^*)$ сумма сетевых
 Алгоритм реализован на языке C++. Основной процедурой является
 алгоритм Дейкстры\cite{dijkstra}.
 
-% \newpage
 
-\begin{lstlisting}[language=C++]
-void Graph::Dijkstra(int v) {
-    std::vector<bool> visited(edges.size(), false);
-    dists[v][v] = 0.0;
-    std::priority_queue<
-      std::pair<double, int>,
-      std::vector<std::pair<double, int>>, Compare> q;
-    visited[v] = true;
-    q.push(std::make_pair(dists[v][v], v));
+\subsection{Исходный код}
+\paragragh{}
+Приправа
+\begin{flushleft} \small
+\begin{minipage}{\linewidth}\label{scrap1}\raggedright\small
+\NWtarget{nuweb11}{} \verb@"edge.h"@\nobreak\ {\footnotesize {11}}$\equiv$
+\vspace{-1ex}
+\begin{list}{}{} \item
+\mbox{}\verb@@\\
+\mbox{}\verb@#pragma once@\\
+\mbox{}\verb@#include <atomic>@\\
+\mbox{}\verb@#include <functional>@\\
+\mbox{}\verb@@\\
+\mbox{}\verb@class Edge {@\\
+\mbox{}\verb@public:@\\
+\mbox{}\verb@    Edge(const Edge& e) :left(e.left), right(e.right), weight(e.weight), travelCount(0) {} //todo check how to fix travelCount(e.travelCount)@\\
+\mbox{}\verb@    Edge(int u, int v, double w) : left(u), right(v), weight(w), travelCount(0) {}@\\
+\mbox{}\verb@    void IncTravelCount();@\\
+\mbox{}\verb@    double GetTotalWeight();@\\
+\mbox{}\verb@    const int GetLeft() const { return left; }@\\
+\mbox{}\verb@    const int GetRight() const { return right; }@\\
+\mbox{}\verb@    const double GetWeight() const { return weight; }@\\
+\mbox{}\verb@    void SetWeight(double w) { weight = w; }@\\
+\mbox{}\verb@private:@\\
+\mbox{}\verb@    int left;@\\
+\mbox{}\verb@    int right;@\\
+\mbox{}\verb@    double weight;@\\
+\mbox{}\verb@    std::atomic<int> travelCount;@\\
+\mbox{}\verb@};@\\
+\mbox{}\verb@@\\
+\mbox{}\verb@struct EdgeHash {@\\
+\mbox{}\verb@    unsigned int operator()(const Edge& e) const {@\\
+\mbox{}\verb@        return std::hash<int>()(e.GetRight());@\\
+\mbox{}\verb@    }@\\
+\mbox{}\verb@};@\\
+\mbox{}\verb@@\\
+\mbox{}\verb@bool operator==(const Edge& e, const Edge& t);@\\
+\mbox{}\verb@@{\NWsep}
+\end{list}
+\vspace{-1.5ex}
+\footnotesize
+\begin{list}{}{\setlength{\itemsep}{-\parsep}\setlength{\itemindent}{-\leftmargin}}
 
-    while (!q.empty()) {
-        std::pair<double, int> from = q.top();
-        q.pop();
-        for (auto& edge : edges[from.second]) {
-            int to = edge.GetRight();
-            if (!visited[to]) {
-                double tmp = from.first + edge.GetWeight();
-                if (dists[v][to] > tmp) {
-                    dists[v][to] = tmp;
-                    visited[to] = false;
-                    q.push(std::make_pair(dists[v][to], to));
-                }
-            }
-        }
-    }
-}
-\end{lstlisting}
-
+\item{}
+\end{list}
+\end{minipage}\vspace{4ex}
+\end{flushleft}
 \paragraph{Оцена вычислительной сложности алгоритма.}
 
 На данном графе $G = (V, E, W)$, алгоритм Дейкстры имеет вычислительную  сложность $O(V \log V + E) $.
