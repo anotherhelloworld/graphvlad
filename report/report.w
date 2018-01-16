@@ -20,17 +20,21 @@
 \title{Общая связность сети. Критическое ребро.}
 
 \author{
-  Кирпа Вадим
+  Кирпа В. Д. (реализация, тестирование)
   \and
-  Махлярчук Андрей
+  Махлярчук Андрей (документация, тестирование)
   \and
-  Утин Никита
+  Утин Никита (визуализация, тестирование)
   \and
-  Березкин Аркадий
+  Березкин Аркадий (реализация, документация)
 }
 
 \maketitle
 \thispagestyle{empty}
+\newpage
+
+
+
 \newpage
 
 \section{Постановка задачи:}
@@ -47,7 +51,9 @@ $W(e^*) \rightarrow \gamma W(e^*)$ сумма сетевых
 
 \paragraph{}
 Для нахождения суммы сетевых расстояний в графе использовался
-алгоритм Дейкстры\cite{dijkstra}.
+алгоритм Дейкстры\cite{dijkstra}. Не смотря на то, что алгоритм
+Дейкстры не подходит для не связных графов, то, что он запускается
+из каждой вершины позволяет его использовать, чтобы посчитать необходимую сумм.
 
 \paragraph{}
 Чтобы найти критическое ребро сумма сетевых расстояний считается
@@ -92,8 +98,8 @@ private:
 
 \paragraph{}
 Класс имеет 2 конструктора, один из которых конструктор копирования.
-Конструктор принимает 2 номера соеденяемых вершин типа $int$, 
-вес ребра типа $double$ и уникальный $id$ типа, для того чтобы 
+Конструктор принимает 2 номера соединяемых вершин типа $int$, 
+вес ребра типа $double$ и уникальный $id$ типа $int$, для того чтобы 
 можно было эффективно искать ребра. Эти данные сохраняются в качестве
 полей объекта. 
 
@@ -123,7 +129,8 @@ void SetWeight(double w) { weight = w; }
 @}
 
 \paragraph{}
-Для удобства использования струкрутры были написаны операторы.
+Для удобства использования структутры были написаны оператор "()" 
+обеспечивающий возможность удобного доступа к элементам и оператор сравнения.
 
 @d utilities @{
 struct EdgeHash {
@@ -187,7 +194,6 @@ private:
 #include <regex>
 #include "edge.h"
 #include <cfloat>
-
 @}
 
 \paragraph{}
@@ -265,9 +271,9 @@ void RunDijkstraThread(int from, int len);
 @}
 
 \paragraph{}
-Функция, добавляющая ребро в граф. Принимает на вход номера вершин, вес, индекс нового ребра.
+Функция, добавляющая ребро в граф. Принимает на вход номера вершин (u, v), вес, индекс нового ребра.
 @d graph add edge @{
-void AddEdge(int index, int vertex, double weight, int id);   
+void AddEdge(int u, int v, double weight, int id);   
 @}
 
 \paragraph{}
@@ -281,7 +287,7 @@ public:
 };
 @}
 
-Ниже приведена реализация фукнций описанного выше класса в $graph.h$
+Ниже приведена реализация функций описанного выше класса в $graph.h$
 
 @O src/graph.cpp 
 @{
@@ -291,13 +297,32 @@ public:
 using namespace std;
 
 //Public methods
+@<gimpl constructors@>
+@<gimpl open@>
+@<gimpl dijkstra@>
+@<gimpl critical search @>
+@<gimpl Dijkstra algorythm @>
+@<gimpl run Dijkstra@>
+@<gimpl add edge @>
+@}
 
+\paragraph{}
+Имплементация конструкторов графа. Перегруженный конструктор принимает на вход имя файла, содержащего
+данные об исходном графе.
+
+@d gimpl constructors @{
 Graph::Graph() { }
 
 Graph::Graph(std::string filename) {
     open(filename);
-}
+} 
+@}
 
+
+\paragraph{}
+Функция считывания файла с исходным графом.
+
+@d gimpl open @{
 void Graph::open(std::string filename) {
     if (filename != "") {
         std::ifstream in(filename);
@@ -305,41 +330,87 @@ void Graph::open(std::string filename) {
         double weight;
         int n = 0;
         int id = 0;
-        while (!in.eof()) {
-            int v;
-            int u;
-            in >> index >> vertex >> weight;
-            if (coord.find(index) != coord.end()) {
-                v = coord[index];
-            }
-            else {
-                v = n++;
-                coord.insert(std::make_pair(index, v));
-            }
-            if (coord.find(vertex) != coord.end()) {
-                u = coord[vertex];
-            }
-            else {
-                u = n++;
-                coord.insert(std::make_pair(vertex, u));
-            }
-            AddEdge(u, v, weight, id++);
-            AddEdge(v, u, weight, id++);
-        }
+        @<gimpl open while@>
 
-        for (auto &i : coord)
-            coord_to_vertecies[i.second] = i.first;
+        @<gimpl open for@>
     }
     distSum.resize(edges.size(), 0);
-}
+} 
+@}
 
+\paragraph{}
+Цикл, предназначенный для считывния ребер графа и перенумировывания вершин графа, 
+с целью иметь возможность заменить в основной структуре, содержащей граф std::unordered\_map на std::vector
+и не столкнуться с ограничениями, связанными с размером памяти. Заменить std::unordered\_map на std::vector может
+потребоваться в случае, если мы хотим добиться большей производительности, так как стандартный шаблонный класс
+std::vector более оптимизирован для работы с различными уровнями кэша процессора.
+
+@d gimpl open while @{
+while (!in.eof()) {
+          int v;
+          int u;
+          in >> index >> vertex >> weight;
+          if (coord.find(index) != coord.end()) {
+              v = coord[index];
+          }
+          else {
+              v = n++;
+              coord.insert(std::make_pair(index, v));
+          }
+          if (coord.find(vertex) != coord.end()) {
+              u = coord[vertex];
+          }
+          else {
+              u = n++;
+              coord.insert(std::make_pair(vertex, u));
+          }
+          AddEdge(u, v, weight, id++);
+          AddEdge(v, u, weight, id++);
+} 
+@}
+
+\paragraph{}
+Цикл, предназначенный для сохранения графа в виде списка смежности.
+
+@d gimpl open for @{
+for (auto &i : coord)
+    coord_to_vertecies[i.second] = i.first;
+@}
+
+\paragraph{}
+Функция, создающая отдельные потоки, в которых мы будем запускать алгоритм Дейкстры.
+
+@d gimpl dijkstra @{
 double Graph::RunDijkstraAsync() {
-    int threads_count = 8; //todo replace
+    @<gimpl run threadscount@>
 
-    std::vector<thread> threads;
+    @<gimpl run threads@>
+
     int batch = edges.size() / threads_count;
     int remainder = edges.size() % threads_count;
-    for (int i = 0; i < threads_count - 1; ++i)
+
+    @<gimpl run cycle@>
+    
+    @<gimpl run sum@>
+} 
+@}
+
+\paragraph{}
+Колличество потоков, в которых будем запускать алгоритм Дейкстры.
+@d gimpl run threadscount @{
+int threads_count = 8;
+@}
+
+\paragraph{}
+Массив для хранения указателей на потоки.
+@d gimpl run threads @{
+std::vector<thread> threads;
+@}
+
+\paragraph{}
+Цикл, создающий отдельные потоки, указатели на которые сохраняются в массиве.
+@d gimpl run cycle @{
+for (int i = 0; i < threads_count - 1; ++i)
         threads.push_back(thread(
           &Graph::RunDijkstraThread, 
           this, 
@@ -352,129 +423,206 @@ double Graph::RunDijkstraAsync() {
         (threads_count - 1) * batch, 
         batch + remainder
       ));
-    for (int i = 0; i < threads_count; ++i)
-        threads[i].join();
 
-    double sum = 0;
-    for (auto &i : distSum)
-        sum += i;       
-    return sum;
-}
+  for (int i = 0; i < threads_count; ++i)
+        threads[i].join(); 
+@}
 
+\paragraph{}
+Суммируем все полученные сетевые расстояния
+@d gimpl run sum @{
+double sum = 0;
+for (auto &i : distSum)
+    sum += i;
+@}
+
+
+\paragraph{}
+Основная функция программы, которая выполняет поиск критического ребра
+
+@d gimpl critical search @{
 void Graph::FindCriticalEdge(double k) {
-    int criticalLeft = -1;
-    int criticalRight = -1;
-    int size = edges.size();
-    int count = 0;
-    double distances = 0;
+
+    @<gimpl critical init@>
+
     if (k >= 0.0 && k <= 1.0) {
-        double min = DBL_MAX;
-        for (auto &v : edges) {
-            cout << count++ << " out of " << size << flush;
-            for (auto &edge : v.second) {
-                if (usedEdges.find(edge.getId()) == usedEdges.end()) {
-                    double PrevWeight = edge.GetWeight();
-                    auto it = edges[edge.GetRight()]
-                      .find(Edge(0, edge.GetLeft(), 0, 0));
-                    int invId = it->getId();
-                    usedEdges.insert(invId);
-                    edges[edge.GetRight()].erase(it);
-                    edges[edge.GetRight()]
-                      .insert(Edge(
-                        edge.GetRight(), 
-                        edge.GetLeft(), 
-                        PrevWeight*k, 
-                        invId));
-                    ((Edge&)edge).SetWeight(PrevWeight*k);
-                    double sum = RunDijkstraAsync();
-                    if (min > sum) {
-                        min = sum;
-                        criticalLeft = edge.GetLeft();
-                        criticalRight = edge.GetRight();
-                    }
-                    ((Edge&)edge).SetWeight(PrevWeight);
-                    edges[edge.GetRight()]
-                      .erase(Edge(0, edge.GetLeft(), 0, 0));
-                    edges[edge.GetRight()]
-                      .insert(Edge(
-                        edge.GetRight(), 
-                        edge.GetLeft(), 
-                        PrevWeight, 
-                        invId));
-                }
-            }
-            cout << "\r";
-        }
-        cout << endl;
-        distances = min;
+      @< gimpl critical min@>
     }
     else if (k >= 1.0) {
-        double max = 0;
-        for (auto &v : edges) {
-            cout << count++ << " out of " << size << flush;
-            for (auto &edge : v.second) {
-                if (usedEdges.find(edge.getId()) == usedEdges.end()) {
-                    double PrevWeight = edge.GetWeight();
-                    auto it = edges[edge.GetRight()]
-                      .find(Edge(0, edge.GetLeft(), 0, 0));
-                    int invId = it->getId();
-                    usedEdges.insert(invId);
-                    edges[edge.GetRight()].erase(it);
-                    edges[edge.GetRight()]
-                      .insert(Edge(
-                        edge.GetRight(), 
-                        edge.GetLeft(), 
-                        PrevWeight*k, 
-                        invId));
-                    ((Edge&)edge).SetWeight(PrevWeight*k);
-                    double sum = RunDijkstraAsync();
-                    if (max < sum) {
-                        max = sum;
-                        criticalLeft = edge.GetLeft();
-                        criticalRight = edge.GetRight();
-                    }
-                    ((Edge&)edge).SetWeight(PrevWeight);
-                    edges[edge.GetRight()]
-                      .erase(Edge(0, edge.GetLeft(), 0, 0));
-                    edges[edge.GetRight()]
-                      .insert(Edge(
-                        edge.GetRight(), 
-                        edge.GetLeft(), 
-                        PrevWeight, 
-                        invId));
-                }
-            }
-            cout << "\r";
-        }
-        distances = max;
+      @< gimpl critical max@>  
     }
-    else {
 
-    }
-    if (criticalLeft != -1 && criticalRight != -1) {
-        auto edge = edges[criticalLeft].find(Edge(0, criticalRight, 0, 0));
-        cout << "New distances: " << distances << ". With edge between ";
-        cout << coord_to_vertecies[edge->GetLeft()] 
-          << " and " 
-          << coord_to_vertecies[edge->GetRight()] 
-          << ". Weight: " 
-          << edge->GetWeight() << endl;
-    }
+    @<gimpl critical print@>
 }
+@}
+
+\paragraph{}
+Инициализация необходимых перменных.
+@d gimpl critical init @{
+int criticalLeft = -1;
+int criticalRight = -1;
+int size = edges.size();
+int count = 0;
+double distances = 0; 
+@}
+
+\paragraph{}
+Вывод ответа.
+@d gimpl critical print @{
+if (criticalLeft != -1 && criticalRight != -1) {
+    auto edge = edges[criticalLeft].find(Edge(0, criticalRight, 0, 0));
+    cout << "New distances: " << distances << ". With edge between ";
+    cout << coord_to_vertecies[edge->GetLeft()] 
+      << " and " 
+      << coord_to_vertecies[edge->GetRight()] 
+      << ". Weight: " 
+      << edge->GetWeight() << endl;
+} 
+@}
+
+\paragraph{}
+Код отвечающий за поиск критического ребра в случае, при $\gamma \leq 1$
+@d gimpl critical min @{
+double min = DBL_MAX;
+for (auto &v : edges) {
+    cout << count++ << " out of " << size << flush;
+    for (auto &edge : v.second) {
+        if (usedEdges.find(edge.getId()) == usedEdges.end()) {
+            double PrevWeight = edge.GetWeight();
+            auto it = edges[edge.GetRight()]
+              .find(Edge(0, edge.GetLeft(), 0, 0));
+            int invId = it->getId();
+            usedEdges.insert(invId);
+            edges[edge.GetRight()].erase(it);
+            edges[edge.GetRight()]
+              .insert(Edge(
+                edge.GetRight(), 
+                edge.GetLeft(), 
+                PrevWeight*k, 
+                invId));
+            ((Edge&)edge).SetWeight(PrevWeight*k);
+            double sum = RunDijkstraAsync();
+            if (min > sum) {
+                min = sum;
+                criticalLeft = edge.GetLeft();
+                criticalRight = edge.GetRight();
+            }
+            ((Edge&)edge).SetWeight(PrevWeight);
+            edges[edge.GetRight()]
+              .erase(Edge(0, edge.GetLeft(), 0, 0));
+            edges[edge.GetRight()]
+              .insert(Edge(
+                edge.GetRight(), 
+                edge.GetLeft(), 
+                PrevWeight, 
+                invId));
+        }
+    }
+    cout << "\r";
+}
+cout << endl;
+distances = min;
+@}
+
+\paragraph{}
+Код отвечающий за поиск критического ребра при $\gamma > 1$ 
+
+@D gimpl critical max @{
+double max = 0;
+for (auto &v : edges) {
+    cout << count++ << " out of " << size << flush;
+    for (auto &edge : v.second) {
+        if (usedEdges.find(edge.getId()) == usedEdges.end()) {
+            double PrevWeight = edge.GetWeight();
+            auto it = edges[edge.GetRight()]
+              .find(Edge(0, edge.GetLeft(), 0, 0));
+            int invId = it->getId();
+            usedEdges.insert(invId);
+            edges[edge.GetRight()].erase(it);
+            edges[edge.GetRight()]
+              .insert(Edge(
+                edge.GetRight(), 
+                edge.GetLeft(), 
+                PrevWeight*k, 
+                invId));
+            ((Edge&)edge).SetWeight(PrevWeight*k);
+            double sum = RunDijkstraAsync();
+            if (max < sum) {
+                max = sum;
+                criticalLeft = edge.GetLeft();
+                criticalRight = edge.GetRight();
+            }
+            ((Edge&)edge).SetWeight(PrevWeight);
+            edges[edge.GetRight()]
+              .erase(Edge(0, edge.GetLeft(), 0, 0));
+            edges[edge.GetRight()]
+              .insert(Edge(
+                edge.GetRight(), 
+                edge.GetLeft(), 
+                PrevWeight, 
+                invId));
+        }
+    }
+    cout << "\r";
+}
+cout << endl;
+distances = max;
+@}
 
 
+\paragraph{}
+Реализация алгоритма Дейкстры \cite{Dijkstra}
+@d gimpl Dijkstra... @{
 double Graph::Dijkstra(int v) {
-    std::vector<double> dist(edges.size(), inf);
-    std::vector<bool> visited(edges.size(), false);
-    dist[v] = 0.0;
-    std::priority_queue<
-      std::pair<double, int>, 
-      std::vector<std::pair<double, int>>, 
-      Compare> q;
-    visited[v] = true;
-    q.push(std::make_pair(dist[v], v));
 
-    while (!q.empty()) {
+    @< gimpl djk vars@>
+
+    
+    @< gimpl djk while@>
+
+
+    @< gimpl djk sum@>
+    return sum;
+}
+@}
+
+\paragraph{}
+Инициализация массивов для хранения дистанций и посещенных вершин.
+В очереди с приоритетами $q$, хранится пара: вес, ребро.
+@d gimpl djk vars @{
+std::vector<double> dist(edges.size(), inf);
+std::vector<bool> visited(edges.size(), false);
+
+dist[v] = 0.0;
+std::priority_queue<
+  std::pair<double, int>, 
+  std::vector<std::pair<double, int>>, 
+  Compare> q;
+visited[v] = true;
+q.push(std::make_pair(dist[v], v));
+@}
+
+\paragraph{}
+Функция, которая запускает алгоритм Дейкстры на указанных вершинах.
+@d gimpl run Dijkstra @{
+void Graph::RunDijkstraThread(int from, int len) {
+    for (int i = from; i < from + len; ++i)
+        distSum[i] = Dijkstra(i);
+}
+@}
+
+\paragraph{}
+Фукнция добавляющая ребро в граф.
+@d gimpl add edge @{
+void Graph::AddEdge(int index, int vertex, double weight, int id) {
+    edges[index].insert(Edge(index, vertex, weight, id));
+}
+@}
+
+\paragraph{}
+Основной цикл работы алгоритма Дейкстры.
+@d gimpl djk while @{
+while (!q.empty()) {
         std::pair<double, int> from = q.top(); q.pop();
         for (auto& edge : edges[from.second]) {
             int to = edge.GetRight();
@@ -487,29 +635,22 @@ double Graph::Dijkstra(int v) {
                 }
             }
         }
-    }
-    double sum = 0;
-    for (auto &i : dist)
-        if (i != inf)
-            sum += i;
-    return sum;
-}
-
-void Graph::RunDijkstraThread(int from, int len) {
-    for (int i = from; i < from + len; ++i)
-        distSum[i] = Dijkstra(i);
-}
-
-void Graph::AddEdge(int index, int vertex, double weight, int id) {
-    edges[index].insert(Edge(index, vertex, weight, id));
-}
-
+    } 
 @}
 
 \paragraph{}
-Ниже приведен исходный код входной точки пограммы. 
-Имя файла и значение $\gamma$ передаются в качестве
-параметров интерфейса командной строки.
+Подсчет суммы сетевых расстояний.
+@d gimpl djk sum @{
+double sum = 0;
+    for (auto &i : dist)
+        if (i != inf)
+            sum += i; 
+@}
+
+\paragraph{}
+Ниже приведен исходный код входной точки программы. 
+Имя файла содержащего данные о графе и значение 
+$\gamma$ передаются в качестве параметров интерфейса командной строки.
 
 @o src/main.cpp @{
 #include "graph.h"
@@ -545,7 +686,7 @@ int main(int argc, char* argv[]) {
 \paragraph{Оптимизации:}
 Чтобы ускорить исполнение программы, из каждой
 вершины алгоритм Дейкстры запускается в отдельном
-потоке. Т.к. граф разрежен в памяти он хранится в
+потоке. Для экономии памяти граф хранится в
 виде списка смежности.
 
 \section{Результаты}
@@ -572,15 +713,6 @@ int main(int argc, char* argv[]) {
 ребро с соответствующей минимальной суммой сетевых расстояний. 
 На каждой итерации работы алгоритма Дейкстры получим сумму сетевых расстояний для исходного графа:
 
-\begin{gather}
-1 : 1 + 5 + 6 + 6 + 2 \\
-2 : 1 + 5 + 6 + 6 + 2 \\
-3 : 1 + 1 + 4 + 5 + 5 \\
-4 : 1 + 1 + 4 + 5 + 5 \\
-5 : 1 + 5 + 6 + 6 + 2 \\
-6 : 1 + 5 + 6 + 6 + 2
-\end{gather}
-
 Сумма сетевых расстояний в исходном графе $S = 112$. 
 
 \begin{figure}[h]
@@ -595,15 +727,6 @@ int main(int argc, char* argv[]) {
 $\gamma < 1$ приводит к минимизации суммы сетевых расстояний.
 При $\gamma = 0.5$ алгоритм меняет вес критического ребра на $0.5 \cdot w_i$ (рис.~\ref{fig:min_graph_2}).
 Для обновленного графа, в котором мы заменили вес критического ребра на 2 получим сумму сетевых расстояний:
-
-\begin{gather}
-1 : 1 + 3 + 4 + 4 + 2 \\
-2 : 1 + 3 + 4 + 4 + 2 \\
-3 : 1 + 1 + 2 + 3 + 3 \\
-4 : 1 + 1 + 2 + 3 + 3 \\
-5 : 1 + 3 + 4 + 4 + 2 \\
-6 : 1 + 3 + 4 + 4 + 2
-\end{gather}
 
 В таком случае сумма сетевых расстояний для обновленного графа будет равнятся $S^* = 76$.
 
@@ -620,15 +743,6 @@ $\gamma < 1$ приводит к минимизации суммы сетевы�
 В обновленном графе, с весом критического ребра = 8 мы получим следующую
 сумму сетевых расстояний:
 
-\begin{gather}
-1 : 1 + 9 + 10 + 10 + 2 \\
-2 : 1 + 9 + 10 + 10 + 2 \\
-3 : 1 + 1 + 8  + 9  + 9 \\
-4 : 1 + 1 + 8  + 9  + 9 \\
-5 : 1 + 9 + 10 + 10 + 2 \\
-6 : 1 + 9 + 10 + 10 + 2
-\end{gather}
-
 Что дает сумму сетевых расстояний равную $S^* = 184$
 
 \subsection{Граф малого размера (20 вершин)}
@@ -637,7 +751,7 @@ $\gamma < 1$ приводит к минимизации суммы сетевы�
 При запуске на графе малого размера (рис~\ref{fig:small}) 
 алгоритм корректно определил критическое ребро.
 Этому ребру был намеренно предан большой вес для удобства тестирования.
-При $k = 0.5$ и при $k = 1.5$ алгоритм определял одно
+При $\gamma = 0.5$ и при $\gamma = 1.5$ алгоритм определял одно
 и то же ребро между 19-й и 20-й вершинами (отмечено красным),
 однако изменение веса этого ребра приводило к разным итоговым
 суммам сетевых расстояний, а именно к $12542$ и $14264$ соотвественно.
@@ -653,7 +767,7 @@ $\gamma < 1$ приводит к минимизации суммы сетевы�
 
 \paragraph{}
 В качестве графа среднего размера был взят сокращеное представление 
-транспортной сети города Владивостока на 2009-й год (рис.~\ref{vlad_2009}). 
+транспортной сети города Владивостока на 2009-й год (рис.~\ref{fig:vlad_2009}). 
 В данном представлении 1542 вершины и 1653 ребра.
 
 \begin{figure}[h]
@@ -664,10 +778,12 @@ $\gamma < 1$ приводит к минимизации суммы сетевы�
 \end{figure}
 
 \paragraph{}
-Алгоритм был запущен с значениями $\gamma = 0.5$ и $\gamma = 1.5$ и определил 
-критическое ребро между 175й и 176й вершиной, на рис~\ref{fig:vlad_2009_min}. 
-При $\gamma = 0.5$ сумма сетевых расстояний составила $2.60341*10^{10}$. 
-При $\gamma = 1.5$ сумма сетевых расстояний составила $2.67274*10^{10}$.
+Алгоритм был запущен с значениями $\gamma = 0.5$ и $\gamma = 24.5$ и определил 
+критическое ребра между 175й и 176й вершиной и между 159-й и 160-й вершинами соответвенно.
+На рис~\ref{fig:vlad_2009_min} изображен граф с отмеченными найденными критическими ребрами.
+Исходная сумма сетевых расстояний составляет $2.64371\cdot10^{10}$.
+При $\gamma = 0.5$ сумма сетевых расстояний составила $2.60341\cdot10^{10}$. 
+При $\gamma = 24.5$ сумма сетевых расстояний составила $3.84203\cdot10^{10}$.
 
 \begin{figure}[h]
     \centering
@@ -686,7 +802,7 @@ $\gamma < 1$ приводит к минимизации суммы сетевы�
 
 \begin{thebibliography}{9}
 \bibitem{dijkstra}
-Dijkstra E. W. \textit{A note on two problems in connexion with graphs} //
+Dijkstra E. W. \textit{A note on two problems in connection with graphs} //
 \textit{Numer. Math} — Springer Science+Business Media, 1959.
 — Vol. 1, Iss. 1. — P. 269–271.
 \end{thebibliography}

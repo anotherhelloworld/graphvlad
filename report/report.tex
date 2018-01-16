@@ -35,17 +35,21 @@
 \title{Общая связность сети. Критическое ребро.}
 
 \author{
-  Кирпа Вадим
+  Кирпа В. Д. (реализация, тестирование)
   \and
-  Махлярчук Андрей
+  Махлярчук Андрей (документация, тестирование)
   \and
-  Утин Никита
+  Утин Никита (визуализация, тестирование)
   \and
-  Березкин Аркадий
+  Березкин Аркадий (реализация, документация)
 }
 
 \maketitle
 \thispagestyle{empty}
+\newpage
+
+
+
 \newpage
 
 \section{Постановка задачи:}
@@ -62,7 +66,9 @@ $W(e^*) \rightarrow \gamma W(e^*)$ сумма сетевых
 
 \paragraph{}
 Для нахождения суммы сетевых расстояний в графе использовался
-алгоритм Дейкстры\cite{dijkstra}.
+алгоритм Дейкстры\cite{dijkstra}. Не смотря на то, что алгоритм
+Дейкстры не подходит для не связных графов, то, что он запускается
+из каждой вершины позволяет его использовать, чтобы посчитать необходимую сумм.
 
 \paragraph{}
 Чтобы найти критическое ребро сумма сетевых расстояний считается
@@ -120,8 +126,8 @@ $W(e^*) \rightarrow \gamma W(e^*)$ сумма сетевых
 \end{flushleft}
 \paragraph{}
 Класс имеет 2 конструктора, один из которых конструктор копирования.
-Конструктор принимает 2 номера соеденяемых вершин типа $int$, 
-вес ребра типа $double$ и уникальный $id$ типа, для того чтобы 
+Конструктор принимает 2 номера соединяемых вершин типа $int$, 
+вес ребра типа $double$ и уникальный $id$ типа $int$, для того чтобы 
 можно было эффективно искать ребра. Эти данные сохраняются в качестве
 полей объекта. 
 
@@ -179,7 +185,8 @@ $W(e^*) \rightarrow \gamma W(e^*)$ сумма сетевых
 \end{minipage}\vspace{4ex}
 \end{flushleft}
 \paragraph{}
-Для удобства использования струкрутры были написаны операторы.
+Для удобства использования структутры были написаны оператор "()" 
+обеспечивающий возможность удобного доступа к элементам и оператор сравнения.
 
 \begin{flushleft} \small
 \begin{minipage}{\linewidth}\label{scrap4}\raggedright\small
@@ -287,7 +294,6 @@ $W(e^*) \rightarrow \gamma W(e^*)$ сумма сетевых
 \mbox{}\verb@#include <regex>@\\
 \mbox{}\verb@#include "edge.h"@\\
 \mbox{}\verb@#include <cfloat>@\\
-\mbox{}\verb@@\\
 \mbox{}\verb@@{\NWsep}
 \end{list}
 \vspace{-1.5ex}
@@ -527,14 +533,14 @@ $W(e^*) \rightarrow \gamma W(e^*)$ сумма сетевых
 \end{minipage}\vspace{4ex}
 \end{flushleft}
 \paragraph{}
-Функция, добавляющая ребро в граф. Принимает на вход номера вершин, вес, индекс нового ребра.
+Функция, добавляющая ребро в граф. Принимает на вход номера вершин (u, v), вес, индекс нового ребра.
 \begin{flushleft} \small
 \begin{minipage}{\linewidth}\label{scrap19}\raggedright\small
 \NWtarget{nuweb10d}{} $\langle\,${\itshape graph add edge}\nobreak\ {\footnotesize {10d}}$\,\rangle\equiv$
 \vspace{-1ex}
 \begin{list}{}{} \item
 \mbox{}\verb@@\\
-\mbox{}\verb@void AddEdge(int index, int vertex, double weight, int id);   @\\
+\mbox{}\verb@void AddEdge(int u, int v, double weight, int id);   @\\
 \mbox{}\verb@@{\NWsep}
 \end{list}
 \vspace{-1.5ex}
@@ -571,7 +577,7 @@ $W(e^*) \rightarrow \gamma W(e^*)$ сумма сетевых
 \end{list}
 \end{minipage}\vspace{4ex}
 \end{flushleft}
-Ниже приведена реализация фукнций описанного выше класса в $graph.h$
+Ниже приведена реализация функций описанного выше класса в $graph.h$
 
 \begin{flushleft} \small\label{scrap21}\raggedright\small
 \NWtarget{nuweb11b}{} \verb@"src/graph.cpp"@\nobreak\ {\footnotesize {11b}}$\equiv$
@@ -584,12 +590,57 @@ $W(e^*) \rightarrow \gamma W(e^*)$ сумма сетевых
 \mbox{}\verb@using namespace std;@\\
 \mbox{}\verb@@\\
 \mbox{}\verb@//Public methods@\\
+\mbox{}\verb@@\hbox{$\langle\,${\itshape gimpl constructors}\nobreak\ {\footnotesize \NWlink{nuweb12a}{12a}}$\,\rangle$}\verb@@\\
+\mbox{}\verb@@\hbox{$\langle\,${\itshape gimpl open}\nobreak\ {\footnotesize \NWlink{nuweb12b}{12b}}$\,\rangle$}\verb@@\\
+\mbox{}\verb@@\hbox{$\langle\,${\itshape gimpl dijkstra}\nobreak\ {\footnotesize \NWlink{nuweb14b}{14b}}$\,\rangle$}\verb@@\\
+\mbox{}\verb@@\hbox{$\langle\,${\itshape gimpl critical search}\nobreak\ {\footnotesize \NWlink{nuweb16b}{16b}}$\,\rangle$}\verb@@\\
+\mbox{}\verb@@\hbox{$\langle\,${\itshape gimpl Dijkstra algorythm}\nobreak\ {\footnotesize \NWlink{nuweb20}{20}}$\,\rangle$}\verb@@\\
+\mbox{}\verb@@\hbox{$\langle\,${\itshape gimpl run Dijkstra}\nobreak\ {\footnotesize \NWlink{nuweb21b}{21b}}$\,\rangle$}\verb@@\\
+\mbox{}\verb@@\hbox{$\langle\,${\itshape gimpl add edge}\nobreak\ {\footnotesize \NWlink{nuweb22a}{22a}}$\,\rangle$}\verb@@\\
+\mbox{}\verb@@{\NWsep}
+\end{list}
+\vspace{-1.5ex}
+\footnotesize
+\begin{list}{}{\setlength{\itemsep}{-\parsep}\setlength{\itemindent}{-\leftmargin}}
+
+\item{}
+\end{list}
+\vspace{4ex}
+\end{flushleft}
+\paragraph{}
+Имплементация конструкторов графа. Перегруженный конструктор принимает на вход имя файла, содержащего
+данные об исходном графе.
+
+\begin{flushleft} \small
+\begin{minipage}{\linewidth}\label{scrap22}\raggedright\small
+\NWtarget{nuweb12a}{} $\langle\,${\itshape gimpl constructors}\nobreak\ {\footnotesize {12a}}$\,\rangle\equiv$
+\vspace{-1ex}
+\begin{list}{}{} \item
 \mbox{}\verb@@\\
 \mbox{}\verb@Graph::Graph() { }@\\
 \mbox{}\verb@@\\
 \mbox{}\verb@Graph::Graph(std::string filename) {@\\
 \mbox{}\verb@    open(filename);@\\
-\mbox{}\verb@}@\\
+\mbox{}\verb@} @\\
+\mbox{}\verb@@{\NWsep}
+\end{list}
+\vspace{-1.5ex}
+\footnotesize
+\begin{list}{}{\setlength{\itemsep}{-\parsep}\setlength{\itemindent}{-\leftmargin}}
+\item \NWtxtMacroRefIn\ \NWlink{nuweb11b}{11b}.
+
+\item{}
+\end{list}
+\end{minipage}\vspace{4ex}
+\end{flushleft}
+\paragraph{}
+Функция считывания файла с исходным графом.
+
+\begin{flushleft} \small
+\begin{minipage}{\linewidth}\label{scrap23}\raggedright\small
+\NWtarget{nuweb12b}{} $\langle\,${\itshape gimpl open}\nobreak\ {\footnotesize {12b}}$\,\rangle\equiv$
+\vspace{-1ex}
+\begin{list}{}{} \item
 \mbox{}\verb@@\\
 \mbox{}\verb@void Graph::open(std::string filename) {@\\
 \mbox{}\verb@    if (filename != "") {@\\
@@ -598,41 +649,171 @@ $W(e^*) \rightarrow \gamma W(e^*)$ сумма сетевых
 \mbox{}\verb@        double weight;@\\
 \mbox{}\verb@        int n = 0;@\\
 \mbox{}\verb@        int id = 0;@\\
-\mbox{}\verb@        while (!in.eof()) {@\\
-\mbox{}\verb@            int v;@\\
-\mbox{}\verb@            int u;@\\
-\mbox{}\verb@            in >> index >> vertex >> weight;@\\
-\mbox{}\verb@            if (coord.find(index) != coord.end()) {@\\
-\mbox{}\verb@                v = coord[index];@\\
-\mbox{}\verb@            }@\\
-\mbox{}\verb@            else {@\\
-\mbox{}\verb@                v = n++;@\\
-\mbox{}\verb@                coord.insert(std::make_pair(index, v));@\\
-\mbox{}\verb@            }@\\
-\mbox{}\verb@            if (coord.find(vertex) != coord.end()) {@\\
-\mbox{}\verb@                u = coord[vertex];@\\
-\mbox{}\verb@            }@\\
-\mbox{}\verb@            else {@\\
-\mbox{}\verb@                u = n++;@\\
-\mbox{}\verb@                coord.insert(std::make_pair(vertex, u));@\\
-\mbox{}\verb@            }@\\
-\mbox{}\verb@            AddEdge(u, v, weight, id++);@\\
-\mbox{}\verb@            AddEdge(v, u, weight, id++);@\\
-\mbox{}\verb@        }@\\
+\mbox{}\verb@        @\hbox{$\langle\,${\itshape gimpl open while}\nobreak\ {\footnotesize \NWlink{nuweb13}{13}}$\,\rangle$}\verb@@\\
 \mbox{}\verb@@\\
-\mbox{}\verb@        for (auto &i : coord)@\\
-\mbox{}\verb@            coord_to_vertecies[i.second] = i.first;@\\
+\mbox{}\verb@        @\hbox{$\langle\,${\itshape gimpl open for}\nobreak\ {\footnotesize \NWlink{nuweb14a}{14a}}$\,\rangle$}\verb@@\\
 \mbox{}\verb@    }@\\
 \mbox{}\verb@    distSum.resize(edges.size(), 0);@\\
-\mbox{}\verb@}@\\
+\mbox{}\verb@} @\\
+\mbox{}\verb@@{\NWsep}
+\end{list}
+\vspace{-1.5ex}
+\footnotesize
+\begin{list}{}{\setlength{\itemsep}{-\parsep}\setlength{\itemindent}{-\leftmargin}}
+\item \NWtxtMacroRefIn\ \NWlink{nuweb11b}{11b}.
+
+\item{}
+\end{list}
+\end{minipage}\vspace{4ex}
+\end{flushleft}
+\paragraph{}
+Цикл, предназначенный для считывния ребер графа и перенумировывания вершин графа, 
+с целью иметь возможность заменить в основной структуре, содержащей граф std::unordered\_map на std::vector
+и не столкнуться с ограничениями, связанными с размером памяти. Заменить std::unordered\_map на std::vector может
+потребоваться в случае, если мы хотим добиться большей производительности, так как стандартный шаблонный класс
+std::vector более оптимизирован для работы с различными уровнями кэша процессора.
+
+\begin{flushleft} \small
+\begin{minipage}{\linewidth}\label{scrap24}\raggedright\small
+\NWtarget{nuweb13}{} $\langle\,${\itshape gimpl open while}\nobreak\ {\footnotesize {13}}$\,\rangle\equiv$
+\vspace{-1ex}
+\begin{list}{}{} \item
+\mbox{}\verb@@\\
+\mbox{}\verb@while (!in.eof()) {@\\
+\mbox{}\verb@          int v;@\\
+\mbox{}\verb@          int u;@\\
+\mbox{}\verb@          in >> index >> vertex >> weight;@\\
+\mbox{}\verb@          if (coord.find(index) != coord.end()) {@\\
+\mbox{}\verb@              v = coord[index];@\\
+\mbox{}\verb@          }@\\
+\mbox{}\verb@          else {@\\
+\mbox{}\verb@              v = n++;@\\
+\mbox{}\verb@              coord.insert(std::make_pair(index, v));@\\
+\mbox{}\verb@          }@\\
+\mbox{}\verb@          if (coord.find(vertex) != coord.end()) {@\\
+\mbox{}\verb@              u = coord[vertex];@\\
+\mbox{}\verb@          }@\\
+\mbox{}\verb@          else {@\\
+\mbox{}\verb@              u = n++;@\\
+\mbox{}\verb@              coord.insert(std::make_pair(vertex, u));@\\
+\mbox{}\verb@          }@\\
+\mbox{}\verb@          AddEdge(u, v, weight, id++);@\\
+\mbox{}\verb@          AddEdge(v, u, weight, id++);@\\
+\mbox{}\verb@} @\\
+\mbox{}\verb@@{\NWsep}
+\end{list}
+\vspace{-1.5ex}
+\footnotesize
+\begin{list}{}{\setlength{\itemsep}{-\parsep}\setlength{\itemindent}{-\leftmargin}}
+\item \NWtxtMacroRefIn\ \NWlink{nuweb12b}{12b}.
+
+\item{}
+\end{list}
+\end{minipage}\vspace{4ex}
+\end{flushleft}
+\paragraph{}
+Цикл, предназначенный для сохранения графа в виде списка смежности.
+
+\begin{flushleft} \small
+\begin{minipage}{\linewidth}\label{scrap25}\raggedright\small
+\NWtarget{nuweb14a}{} $\langle\,${\itshape gimpl open for}\nobreak\ {\footnotesize {14a}}$\,\rangle\equiv$
+\vspace{-1ex}
+\begin{list}{}{} \item
+\mbox{}\verb@@\\
+\mbox{}\verb@for (auto &i : coord)@\\
+\mbox{}\verb@    coord_to_vertecies[i.second] = i.first;@\\
+\mbox{}\verb@@{\NWsep}
+\end{list}
+\vspace{-1.5ex}
+\footnotesize
+\begin{list}{}{\setlength{\itemsep}{-\parsep}\setlength{\itemindent}{-\leftmargin}}
+\item \NWtxtMacroRefIn\ \NWlink{nuweb12b}{12b}.
+
+\item{}
+\end{list}
+\end{minipage}\vspace{4ex}
+\end{flushleft}
+\paragraph{}
+Функция, создающая отдельные потоки, в которых мы будем запускать алгоритм Дейкстры.
+
+\begin{flushleft} \small
+\begin{minipage}{\linewidth}\label{scrap26}\raggedright\small
+\NWtarget{nuweb14b}{} $\langle\,${\itshape gimpl dijkstra}\nobreak\ {\footnotesize {14b}}$\,\rangle\equiv$
+\vspace{-1ex}
+\begin{list}{}{} \item
 \mbox{}\verb@@\\
 \mbox{}\verb@double Graph::RunDijkstraAsync() {@\\
-\mbox{}\verb@    int threads_count = 8; //todo replace@\\
+\mbox{}\verb@    @\hbox{$\langle\,${\itshape gimpl run threadscount}\nobreak\ {\footnotesize \NWlink{nuweb14c}{14c}}$\,\rangle$}\verb@@\\
 \mbox{}\verb@@\\
-\mbox{}\verb@    std::vector<thread> threads;@\\
+\mbox{}\verb@    @\hbox{$\langle\,${\itshape gimpl run threads}\nobreak\ {\footnotesize \NWlink{nuweb15a}{15a}}$\,\rangle$}\verb@@\\
+\mbox{}\verb@@\\
 \mbox{}\verb@    int batch = edges.size() / threads_count;@\\
 \mbox{}\verb@    int remainder = edges.size() % threads_count;@\\
-\mbox{}\verb@    for (int i = 0; i < threads_count - 1; ++i)@\\
+\mbox{}\verb@@\\
+\mbox{}\verb@    @\hbox{$\langle\,${\itshape gimpl run cycle}\nobreak\ {\footnotesize \NWlink{nuweb15b}{15b}}$\,\rangle$}\verb@@\\
+\mbox{}\verb@    @\\
+\mbox{}\verb@    @\hbox{$\langle\,${\itshape gimpl run sum}\nobreak\ {\footnotesize \NWlink{nuweb16a}{16a}}$\,\rangle$}\verb@@\\
+\mbox{}\verb@} @\\
+\mbox{}\verb@@{\NWsep}
+\end{list}
+\vspace{-1.5ex}
+\footnotesize
+\begin{list}{}{\setlength{\itemsep}{-\parsep}\setlength{\itemindent}{-\leftmargin}}
+\item \NWtxtMacroRefIn\ \NWlink{nuweb11b}{11b}.
+
+\item{}
+\end{list}
+\end{minipage}\vspace{4ex}
+\end{flushleft}
+\paragraph{}
+Колличество потоков, в которых будем запускать алгоритм Дейкстры.
+\begin{flushleft} \small
+\begin{minipage}{\linewidth}\label{scrap27}\raggedright\small
+\NWtarget{nuweb14c}{} $\langle\,${\itshape gimpl run threadscount}\nobreak\ {\footnotesize {14c}}$\,\rangle\equiv$
+\vspace{-1ex}
+\begin{list}{}{} \item
+\mbox{}\verb@@\\
+\mbox{}\verb@int threads_count = 8;@\\
+\mbox{}\verb@@{\NWsep}
+\end{list}
+\vspace{-1.5ex}
+\footnotesize
+\begin{list}{}{\setlength{\itemsep}{-\parsep}\setlength{\itemindent}{-\leftmargin}}
+\item \NWtxtMacroRefIn\ \NWlink{nuweb14b}{14b}.
+
+\item{}
+\end{list}
+\end{minipage}\vspace{4ex}
+\end{flushleft}
+\paragraph{}
+Массив для хранения указателей на потоки.
+\begin{flushleft} \small
+\begin{minipage}{\linewidth}\label{scrap28}\raggedright\small
+\NWtarget{nuweb15a}{} $\langle\,${\itshape gimpl run threads}\nobreak\ {\footnotesize {15a}}$\,\rangle\equiv$
+\vspace{-1ex}
+\begin{list}{}{} \item
+\mbox{}\verb@@\\
+\mbox{}\verb@std::vector<thread> threads;@\\
+\mbox{}\verb@@{\NWsep}
+\end{list}
+\vspace{-1.5ex}
+\footnotesize
+\begin{list}{}{\setlength{\itemsep}{-\parsep}\setlength{\itemindent}{-\leftmargin}}
+\item \NWtxtMacroRefIn\ \NWlink{nuweb14b}{14b}.
+
+\item{}
+\end{list}
+\end{minipage}\vspace{4ex}
+\end{flushleft}
+\paragraph{}
+Цикл, создающий отдельные потоки, указатели на которые сохраняются в массиве.
+\begin{flushleft} \small
+\begin{minipage}{\linewidth}\label{scrap29}\raggedright\small
+\NWtarget{nuweb15b}{} $\langle\,${\itshape gimpl run cycle}\nobreak\ {\footnotesize {15b}}$\,\rangle\equiv$
+\vspace{-1ex}
+\begin{list}{}{} \item
+\mbox{}\verb@@\\
+\mbox{}\verb@for (int i = 0; i < threads_count - 1; ++i)@\\
 \mbox{}\verb@        threads.push_back(thread(@\\
 \mbox{}\verb@          &Graph::RunDijkstraThread, @\\
 \mbox{}\verb@          this, @\\
@@ -645,129 +826,357 @@ $W(e^*) \rightarrow \gamma W(e^*)$ сумма сетевых
 \mbox{}\verb@        (threads_count - 1) * batch, @\\
 \mbox{}\verb@        batch + remainder@\\
 \mbox{}\verb@      ));@\\
-\mbox{}\verb@    for (int i = 0; i < threads_count; ++i)@\\
-\mbox{}\verb@        threads[i].join();@\\
 \mbox{}\verb@@\\
-\mbox{}\verb@    double sum = 0;@\\
-\mbox{}\verb@    for (auto &i : distSum)@\\
-\mbox{}\verb@        sum += i;       @\\
-\mbox{}\verb@    return sum;@\\
-\mbox{}\verb@}@\\
+\mbox{}\verb@  for (int i = 0; i < threads_count; ++i)@\\
+\mbox{}\verb@        threads[i].join(); @\\
+\mbox{}\verb@@{\NWsep}
+\end{list}
+\vspace{-1.5ex}
+\footnotesize
+\begin{list}{}{\setlength{\itemsep}{-\parsep}\setlength{\itemindent}{-\leftmargin}}
+\item \NWtxtMacroRefIn\ \NWlink{nuweb14b}{14b}.
+
+\item{}
+\end{list}
+\end{minipage}\vspace{4ex}
+\end{flushleft}
+\paragraph{}
+Суммируем все полученные сетевые расстояния
+\begin{flushleft} \small
+\begin{minipage}{\linewidth}\label{scrap30}\raggedright\small
+\NWtarget{nuweb16a}{} $\langle\,${\itshape gimpl run sum}\nobreak\ {\footnotesize {16a}}$\,\rangle\equiv$
+\vspace{-1ex}
+\begin{list}{}{} \item
+\mbox{}\verb@@\\
+\mbox{}\verb@double sum = 0;@\\
+\mbox{}\verb@for (auto &i : distSum)@\\
+\mbox{}\verb@    sum += i;@\\
+\mbox{}\verb@@{\NWsep}
+\end{list}
+\vspace{-1.5ex}
+\footnotesize
+\begin{list}{}{\setlength{\itemsep}{-\parsep}\setlength{\itemindent}{-\leftmargin}}
+\item \NWtxtMacroRefIn\ \NWlink{nuweb14b}{14b}.
+
+\item{}
+\end{list}
+\end{minipage}\vspace{4ex}
+\end{flushleft}
+\paragraph{}
+Основная функция программы, которая выполняет поиск критического ребра
+
+\begin{flushleft} \small
+\begin{minipage}{\linewidth}\label{scrap31}\raggedright\small
+\NWtarget{nuweb16b}{} $\langle\,${\itshape gimpl critical search}\nobreak\ {\footnotesize {16b}}$\,\rangle\equiv$
+\vspace{-1ex}
+\begin{list}{}{} \item
 \mbox{}\verb@@\\
 \mbox{}\verb@void Graph::FindCriticalEdge(double k) {@\\
-\mbox{}\verb@    int criticalLeft = -1;@\\
-\mbox{}\verb@    int criticalRight = -1;@\\
-\mbox{}\verb@    int size = edges.size();@\\
-\mbox{}\verb@    int count = 0;@\\
-\mbox{}\verb@    double distances = 0;@\\
+\mbox{}\verb@@\\
+\mbox{}\verb@    @\hbox{$\langle\,${\itshape gimpl critical init}\nobreak\ {\footnotesize \NWlink{nuweb17a}{17a}}$\,\rangle$}\verb@@\\
+\mbox{}\verb@@\\
 \mbox{}\verb@    if (k >= 0.0 && k <= 1.0) {@\\
-\mbox{}\verb@        double min = DBL_MAX;@\\
-\mbox{}\verb@        for (auto &v : edges) {@\\
-\mbox{}\verb@            cout << count++ << " out of " << size << flush;@\\
-\mbox{}\verb@            for (auto &edge : v.second) {@\\
-\mbox{}\verb@                if (usedEdges.find(edge.getId()) == usedEdges.end()) {@\\
-\mbox{}\verb@                    double PrevWeight = edge.GetWeight();@\\
-\mbox{}\verb@                    auto it = edges[edge.GetRight()]@\\
-\mbox{}\verb@                      .find(Edge(0, edge.GetLeft(), 0, 0));@\\
-\mbox{}\verb@                    int invId = it->getId();@\\
-\mbox{}\verb@                    usedEdges.insert(invId);@\\
-\mbox{}\verb@                    edges[edge.GetRight()].erase(it);@\\
-\mbox{}\verb@                    edges[edge.GetRight()]@\\
-\mbox{}\verb@                      .insert(Edge(@\\
-\mbox{}\verb@                        edge.GetRight(), @\\
-\mbox{}\verb@                        edge.GetLeft(), @\\
-\mbox{}\verb@                        PrevWeight*k, @\\
-\mbox{}\verb@                        invId));@\\
-\mbox{}\verb@                    ((Edge&)edge).SetWeight(PrevWeight*k);@\\
-\mbox{}\verb@                    double sum = RunDijkstraAsync();@\\
-\mbox{}\verb@                    if (min > sum) {@\\
-\mbox{}\verb@                        min = sum;@\\
-\mbox{}\verb@                        criticalLeft = edge.GetLeft();@\\
-\mbox{}\verb@                        criticalRight = edge.GetRight();@\\
-\mbox{}\verb@                    }@\\
-\mbox{}\verb@                    ((Edge&)edge).SetWeight(PrevWeight);@\\
-\mbox{}\verb@                    edges[edge.GetRight()]@\\
-\mbox{}\verb@                      .erase(Edge(0, edge.GetLeft(), 0, 0));@\\
-\mbox{}\verb@                    edges[edge.GetRight()]@\\
-\mbox{}\verb@                      .insert(Edge(@\\
-\mbox{}\verb@                        edge.GetRight(), @\\
-\mbox{}\verb@                        edge.GetLeft(), @\\
-\mbox{}\verb@                        PrevWeight, @\\
-\mbox{}\verb@                        invId));@\\
-\mbox{}\verb@                }@\\
-\mbox{}\verb@            }@\\
-\mbox{}\verb@            cout << "\r";@\\
-\mbox{}\verb@        }@\\
-\mbox{}\verb@        cout << endl;@\\
-\mbox{}\verb@        distances = min;@\\
+\mbox{}\verb@      @\hbox{$\langle\,${\itshape gimpl critical min}\nobreak\ {\footnotesize \NWlink{nuweb18}{18}}$\,\rangle$}\verb@@\\
 \mbox{}\verb@    }@\\
 \mbox{}\verb@    else if (k >= 1.0) {@\\
-\mbox{}\verb@        double max = 0;@\\
-\mbox{}\verb@        for (auto &v : edges) {@\\
-\mbox{}\verb@            cout << count++ << " out of " << size << flush;@\\
-\mbox{}\verb@            for (auto &edge : v.second) {@\\
-\mbox{}\verb@                if (usedEdges.find(edge.getId()) == usedEdges.end()) {@\\
-\mbox{}\verb@                    double PrevWeight = edge.GetWeight();@\\
-\mbox{}\verb@                    auto it = edges[edge.GetRight()]@\\
-\mbox{}\verb@                      .find(Edge(0, edge.GetLeft(), 0, 0));@\\
-\mbox{}\verb@                    int invId = it->getId();@\\
-\mbox{}\verb@                    usedEdges.insert(invId);@\\
-\mbox{}\verb@                    edges[edge.GetRight()].erase(it);@\\
-\mbox{}\verb@                    edges[edge.GetRight()]@\\
-\mbox{}\verb@                      .insert(Edge(@\\
-\mbox{}\verb@                        edge.GetRight(), @\\
-\mbox{}\verb@                        edge.GetLeft(), @\\
-\mbox{}\verb@                        PrevWeight*k, @\\
-\mbox{}\verb@                        invId));@\\
-\mbox{}\verb@                    ((Edge&)edge).SetWeight(PrevWeight*k);@\\
-\mbox{}\verb@                    double sum = RunDijkstraAsync();@\\
-\mbox{}\verb@                    if (max < sum) {@\\
-\mbox{}\verb@                        max = sum;@\\
-\mbox{}\verb@                        criticalLeft = edge.GetLeft();@\\
-\mbox{}\verb@                        criticalRight = edge.GetRight();@\\
-\mbox{}\verb@                    }@\\
-\mbox{}\verb@                    ((Edge&)edge).SetWeight(PrevWeight);@\\
-\mbox{}\verb@                    edges[edge.GetRight()]@\\
-\mbox{}\verb@                      .erase(Edge(0, edge.GetLeft(), 0, 0));@\\
-\mbox{}\verb@                    edges[edge.GetRight()]@\\
-\mbox{}\verb@                      .insert(Edge(@\\
-\mbox{}\verb@                        edge.GetRight(), @\\
-\mbox{}\verb@                        edge.GetLeft(), @\\
-\mbox{}\verb@                        PrevWeight, @\\
-\mbox{}\verb@                        invId));@\\
-\mbox{}\verb@                }@\\
-\mbox{}\verb@            }@\\
-\mbox{}\verb@            cout << "\r";@\\
-\mbox{}\verb@        }@\\
-\mbox{}\verb@        distances = max;@\\
+\mbox{}\verb@      @\hbox{$\langle\,${\itshape gimpl critical max}\nobreak\ {\footnotesize \NWlink{nuweb19}{19}}$\,\rangle$}\verb@  @\\
 \mbox{}\verb@    }@\\
-\mbox{}\verb@    else {@\\
 \mbox{}\verb@@\\
-\mbox{}\verb@    }@\\
-\mbox{}\verb@    if (criticalLeft != -1 && criticalRight != -1) {@\\
-\mbox{}\verb@        auto edge = edges[criticalLeft].find(Edge(0, criticalRight, 0, 0));@\\
-\mbox{}\verb@        cout << "New distances: " << distances << ". With edge between ";@\\
-\mbox{}\verb@        cout << coord_to_vertecies[edge->GetLeft()] @\\
-\mbox{}\verb@          << " and " @\\
-\mbox{}\verb@          << coord_to_vertecies[edge->GetRight()] @\\
-\mbox{}\verb@          << ". Weight: " @\\
-\mbox{}\verb@          << edge->GetWeight() << endl;@\\
-\mbox{}\verb@    }@\\
+\mbox{}\verb@    @\hbox{$\langle\,${\itshape gimpl critical print}\nobreak\ {\footnotesize \NWlink{nuweb17b}{17b}}$\,\rangle$}\verb@@\\
 \mbox{}\verb@}@\\
+\mbox{}\verb@@{\NWsep}
+\end{list}
+\vspace{-1.5ex}
+\footnotesize
+\begin{list}{}{\setlength{\itemsep}{-\parsep}\setlength{\itemindent}{-\leftmargin}}
+\item \NWtxtMacroRefIn\ \NWlink{nuweb11b}{11b}.
+
+\item{}
+\end{list}
+\end{minipage}\vspace{4ex}
+\end{flushleft}
+\paragraph{}
+Инициализация необходимых перменных.
+\begin{flushleft} \small
+\begin{minipage}{\linewidth}\label{scrap32}\raggedright\small
+\NWtarget{nuweb17a}{} $\langle\,${\itshape gimpl critical init}\nobreak\ {\footnotesize {17a}}$\,\rangle\equiv$
+\vspace{-1ex}
+\begin{list}{}{} \item
 \mbox{}\verb@@\\
+\mbox{}\verb@int criticalLeft = -1;@\\
+\mbox{}\verb@int criticalRight = -1;@\\
+\mbox{}\verb@int size = edges.size();@\\
+\mbox{}\verb@int count = 0;@\\
+\mbox{}\verb@double distances = 0; @\\
+\mbox{}\verb@@{\NWsep}
+\end{list}
+\vspace{-1.5ex}
+\footnotesize
+\begin{list}{}{\setlength{\itemsep}{-\parsep}\setlength{\itemindent}{-\leftmargin}}
+\item \NWtxtMacroRefIn\ \NWlink{nuweb16b}{16b}.
+
+\item{}
+\end{list}
+\end{minipage}\vspace{4ex}
+\end{flushleft}
+\paragraph{}
+Вывод ответа.
+\begin{flushleft} \small
+\begin{minipage}{\linewidth}\label{scrap33}\raggedright\small
+\NWtarget{nuweb17b}{} $\langle\,${\itshape gimpl critical print}\nobreak\ {\footnotesize {17b}}$\,\rangle\equiv$
+\vspace{-1ex}
+\begin{list}{}{} \item
+\mbox{}\verb@@\\
+\mbox{}\verb@if (criticalLeft != -1 && criticalRight != -1) {@\\
+\mbox{}\verb@    auto edge = edges[criticalLeft].find(Edge(0, criticalRight, 0, 0));@\\
+\mbox{}\verb@    cout << "New distances: " << distances << ". With edge between ";@\\
+\mbox{}\verb@    cout << coord_to_vertecies[edge->GetLeft()] @\\
+\mbox{}\verb@      << " and " @\\
+\mbox{}\verb@      << coord_to_vertecies[edge->GetRight()] @\\
+\mbox{}\verb@      << ". Weight: " @\\
+\mbox{}\verb@      << edge->GetWeight() << endl;@\\
+\mbox{}\verb@} @\\
+\mbox{}\verb@@{\NWsep}
+\end{list}
+\vspace{-1.5ex}
+\footnotesize
+\begin{list}{}{\setlength{\itemsep}{-\parsep}\setlength{\itemindent}{-\leftmargin}}
+\item \NWtxtMacroRefIn\ \NWlink{nuweb16b}{16b}.
+
+\item{}
+\end{list}
+\end{minipage}\vspace{4ex}
+\end{flushleft}
+\paragraph{}
+Код отвечающий за поиск критического ребра в случае, при $\gamma \leq 1$
+\begin{flushleft} \small
+\begin{minipage}{\linewidth}\label{scrap34}\raggedright\small
+\NWtarget{nuweb18}{} $\langle\,${\itshape gimpl critical min}\nobreak\ {\footnotesize {18}}$\,\rangle\equiv$
+\vspace{-1ex}
+\begin{list}{}{} \item
+\mbox{}\verb@@\\
+\mbox{}\verb@double min = DBL_MAX;@\\
+\mbox{}\verb@for (auto &v : edges) {@\\
+\mbox{}\verb@    cout << count++ << " out of " << size << flush;@\\
+\mbox{}\verb@    for (auto &edge : v.second) {@\\
+\mbox{}\verb@        if (usedEdges.find(edge.getId()) == usedEdges.end()) {@\\
+\mbox{}\verb@            double PrevWeight = edge.GetWeight();@\\
+\mbox{}\verb@            auto it = edges[edge.GetRight()]@\\
+\mbox{}\verb@              .find(Edge(0, edge.GetLeft(), 0, 0));@\\
+\mbox{}\verb@            int invId = it->getId();@\\
+\mbox{}\verb@            usedEdges.insert(invId);@\\
+\mbox{}\verb@            edges[edge.GetRight()].erase(it);@\\
+\mbox{}\verb@            edges[edge.GetRight()]@\\
+\mbox{}\verb@              .insert(Edge(@\\
+\mbox{}\verb@                edge.GetRight(), @\\
+\mbox{}\verb@                edge.GetLeft(), @\\
+\mbox{}\verb@                PrevWeight*k, @\\
+\mbox{}\verb@                invId));@\\
+\mbox{}\verb@            ((Edge&)edge).SetWeight(PrevWeight*k);@\\
+\mbox{}\verb@            double sum = RunDijkstraAsync();@\\
+\mbox{}\verb@            if (min > sum) {@\\
+\mbox{}\verb@                min = sum;@\\
+\mbox{}\verb@                criticalLeft = edge.GetLeft();@\\
+\mbox{}\verb@                criticalRight = edge.GetRight();@\\
+\mbox{}\verb@            }@\\
+\mbox{}\verb@            ((Edge&)edge).SetWeight(PrevWeight);@\\
+\mbox{}\verb@            edges[edge.GetRight()]@\\
+\mbox{}\verb@              .erase(Edge(0, edge.GetLeft(), 0, 0));@\\
+\mbox{}\verb@            edges[edge.GetRight()]@\\
+\mbox{}\verb@              .insert(Edge(@\\
+\mbox{}\verb@                edge.GetRight(), @\\
+\mbox{}\verb@                edge.GetLeft(), @\\
+\mbox{}\verb@                PrevWeight, @\\
+\mbox{}\verb@                invId));@\\
+\mbox{}\verb@        }@\\
+\mbox{}\verb@    }@\\
+\mbox{}\verb@    cout << "\r";@\\
+\mbox{}\verb@}@\\
+\mbox{}\verb@cout << endl;@\\
+\mbox{}\verb@distances = min;@\\
+\mbox{}\verb@@{\NWsep}
+\end{list}
+\vspace{-1.5ex}
+\footnotesize
+\begin{list}{}{\setlength{\itemsep}{-\parsep}\setlength{\itemindent}{-\leftmargin}}
+\item \NWtxtMacroRefIn\ \NWlink{nuweb16b}{16b}.
+
+\item{}
+\end{list}
+\end{minipage}\vspace{4ex}
+\end{flushleft}
+\paragraph{}
+Код отвечающий за поиск критического ребра при $\gamma > 1$ 
+
+\begin{flushleft} \small\label{scrap35}\raggedright\small
+\NWtarget{nuweb19}{} $\langle\,${\itshape gimpl critical max}\nobreak\ {\footnotesize {19}}$\,\rangle\equiv$
+\vspace{-1ex}
+\begin{list}{}{} \item
+\mbox{}\verb@@\\
+\mbox{}\verb@double max = 0;@\\
+\mbox{}\verb@for (auto &v : edges) {@\\
+\mbox{}\verb@    cout << count++ << " out of " << size << flush;@\\
+\mbox{}\verb@    for (auto &edge : v.second) {@\\
+\mbox{}\verb@        if (usedEdges.find(edge.getId()) == usedEdges.end()) {@\\
+\mbox{}\verb@            double PrevWeight = edge.GetWeight();@\\
+\mbox{}\verb@            auto it = edges[edge.GetRight()]@\\
+\mbox{}\verb@              .find(Edge(0, edge.GetLeft(), 0, 0));@\\
+\mbox{}\verb@            int invId = it->getId();@\\
+\mbox{}\verb@            usedEdges.insert(invId);@\\
+\mbox{}\verb@            edges[edge.GetRight()].erase(it);@\\
+\mbox{}\verb@            edges[edge.GetRight()]@\\
+\mbox{}\verb@              .insert(Edge(@\\
+\mbox{}\verb@                edge.GetRight(), @\\
+\mbox{}\verb@                edge.GetLeft(), @\\
+\mbox{}\verb@                PrevWeight*k, @\\
+\mbox{}\verb@                invId));@\\
+\mbox{}\verb@            ((Edge&)edge).SetWeight(PrevWeight*k);@\\
+\mbox{}\verb@            double sum = RunDijkstraAsync();@\\
+\mbox{}\verb@            if (max < sum) {@\\
+\mbox{}\verb@                max = sum;@\\
+\mbox{}\verb@                criticalLeft = edge.GetLeft();@\\
+\mbox{}\verb@                criticalRight = edge.GetRight();@\\
+\mbox{}\verb@            }@\\
+\mbox{}\verb@            ((Edge&)edge).SetWeight(PrevWeight);@\\
+\mbox{}\verb@            edges[edge.GetRight()]@\\
+\mbox{}\verb@              .erase(Edge(0, edge.GetLeft(), 0, 0));@\\
+\mbox{}\verb@            edges[edge.GetRight()]@\\
+\mbox{}\verb@              .insert(Edge(@\\
+\mbox{}\verb@                edge.GetRight(), @\\
+\mbox{}\verb@                edge.GetLeft(), @\\
+\mbox{}\verb@                PrevWeight, @\\
+\mbox{}\verb@                invId));@\\
+\mbox{}\verb@        }@\\
+\mbox{}\verb@    }@\\
+\mbox{}\verb@    cout << "\r";@\\
+\mbox{}\verb@}@\\
+\mbox{}\verb@cout << endl;@\\
+\mbox{}\verb@distances = max;@\\
+\mbox{}\verb@@{\NWsep}
+\end{list}
+\vspace{-1.5ex}
+\footnotesize
+\begin{list}{}{\setlength{\itemsep}{-\parsep}\setlength{\itemindent}{-\leftmargin}}
+\item \NWtxtMacroRefIn\ \NWlink{nuweb16b}{16b}.
+
+\item{}
+\end{list}
+\vspace{4ex}
+\end{flushleft}
+\paragraph{}
+Реализация алгоритма Дейкстры \cite{Dijkstra}
+\begin{flushleft} \small
+\begin{minipage}{\linewidth}\label{scrap36}\raggedright\small
+\NWtarget{nuweb20}{} $\langle\,${\itshape gimpl Dijkstra algorythm}\nobreak\ {\footnotesize {20}}$\,\rangle\equiv$
+\vspace{-1ex}
+\begin{list}{}{} \item
 \mbox{}\verb@@\\
 \mbox{}\verb@double Graph::Dijkstra(int v) {@\\
-\mbox{}\verb@    std::vector<double> dist(edges.size(), inf);@\\
-\mbox{}\verb@    std::vector<bool> visited(edges.size(), false);@\\
-\mbox{}\verb@    dist[v] = 0.0;@\\
-\mbox{}\verb@    std::priority_queue<@\\
-\mbox{}\verb@      std::pair<double, int>, @\\
-\mbox{}\verb@      std::vector<std::pair<double, int>>, @\\
-\mbox{}\verb@      Compare> q;@\\
-\mbox{}\verb@    visited[v] = true;@\\
-\mbox{}\verb@    q.push(std::make_pair(dist[v], v));@\\
 \mbox{}\verb@@\\
-\mbox{}\verb@    while (!q.empty()) {@\\
+\mbox{}\verb@    @\hbox{$\langle\,${\itshape gimpl djk vars}\nobreak\ {\footnotesize \NWlink{nuweb21a}{21a}}$\,\rangle$}\verb@@\\
+\mbox{}\verb@@\\
+\mbox{}\verb@    @\\
+\mbox{}\verb@    @\hbox{$\langle\,${\itshape gimpl djk while}\nobreak\ {\footnotesize \NWlink{nuweb22b}{22b}}$\,\rangle$}\verb@@\\
+\mbox{}\verb@@\\
+\mbox{}\verb@@\\
+\mbox{}\verb@    @\hbox{$\langle\,${\itshape gimpl djk sum}\nobreak\ {\footnotesize \NWlink{nuweb23}{23}}$\,\rangle$}\verb@@\\
+\mbox{}\verb@    return sum;@\\
+\mbox{}\verb@}@\\
+\mbox{}\verb@@{\NWsep}
+\end{list}
+\vspace{-1.5ex}
+\footnotesize
+\begin{list}{}{\setlength{\itemsep}{-\parsep}\setlength{\itemindent}{-\leftmargin}}
+\item \NWtxtMacroRefIn\ \NWlink{nuweb11b}{11b}.
+
+\item{}
+\end{list}
+\end{minipage}\vspace{4ex}
+\end{flushleft}
+\paragraph{}
+Инициализация массивов для хранения дистанций и посещенных вершин.
+В очереди с приоритетами $q$, хранится пара: вес, ребро.
+\begin{flushleft} \small
+\begin{minipage}{\linewidth}\label{scrap37}\raggedright\small
+\NWtarget{nuweb21a}{} $\langle\,${\itshape gimpl djk vars}\nobreak\ {\footnotesize {21a}}$\,\rangle\equiv$
+\vspace{-1ex}
+\begin{list}{}{} \item
+\mbox{}\verb@@\\
+\mbox{}\verb@std::vector<double> dist(edges.size(), inf);@\\
+\mbox{}\verb@std::vector<bool> visited(edges.size(), false);@\\
+\mbox{}\verb@@\\
+\mbox{}\verb@dist[v] = 0.0;@\\
+\mbox{}\verb@std::priority_queue<@\\
+\mbox{}\verb@  std::pair<double, int>, @\\
+\mbox{}\verb@  std::vector<std::pair<double, int>>, @\\
+\mbox{}\verb@  Compare> q;@\\
+\mbox{}\verb@visited[v] = true;@\\
+\mbox{}\verb@q.push(std::make_pair(dist[v], v));@\\
+\mbox{}\verb@@{\NWsep}
+\end{list}
+\vspace{-1.5ex}
+\footnotesize
+\begin{list}{}{\setlength{\itemsep}{-\parsep}\setlength{\itemindent}{-\leftmargin}}
+\item \NWtxtMacroRefIn\ \NWlink{nuweb20}{20}.
+
+\item{}
+\end{list}
+\end{minipage}\vspace{4ex}
+\end{flushleft}
+\paragraph{}
+Функция, которая запускает алгоритм Дейкстры на указанных вершинах.
+\begin{flushleft} \small
+\begin{minipage}{\linewidth}\label{scrap38}\raggedright\small
+\NWtarget{nuweb21b}{} $\langle\,${\itshape gimpl run Dijkstra}\nobreak\ {\footnotesize {21b}}$\,\rangle\equiv$
+\vspace{-1ex}
+\begin{list}{}{} \item
+\mbox{}\verb@@\\
+\mbox{}\verb@void Graph::RunDijkstraThread(int from, int len) {@\\
+\mbox{}\verb@    for (int i = from; i < from + len; ++i)@\\
+\mbox{}\verb@        distSum[i] = Dijkstra(i);@\\
+\mbox{}\verb@}@\\
+\mbox{}\verb@@{\NWsep}
+\end{list}
+\vspace{-1.5ex}
+\footnotesize
+\begin{list}{}{\setlength{\itemsep}{-\parsep}\setlength{\itemindent}{-\leftmargin}}
+\item \NWtxtMacroRefIn\ \NWlink{nuweb11b}{11b}.
+
+\item{}
+\end{list}
+\end{minipage}\vspace{4ex}
+\end{flushleft}
+\paragraph{}
+Фукнция добавляющая ребро в граф.
+\begin{flushleft} \small
+\begin{minipage}{\linewidth}\label{scrap39}\raggedright\small
+\NWtarget{nuweb22a}{} $\langle\,${\itshape gimpl add edge}\nobreak\ {\footnotesize {22a}}$\,\rangle\equiv$
+\vspace{-1ex}
+\begin{list}{}{} \item
+\mbox{}\verb@@\\
+\mbox{}\verb@void Graph::AddEdge(int index, int vertex, double weight, int id) {@\\
+\mbox{}\verb@    edges[index].insert(Edge(index, vertex, weight, id));@\\
+\mbox{}\verb@}@\\
+\mbox{}\verb@@{\NWsep}
+\end{list}
+\vspace{-1.5ex}
+\footnotesize
+\begin{list}{}{\setlength{\itemsep}{-\parsep}\setlength{\itemindent}{-\leftmargin}}
+\item \NWtxtMacroRefIn\ \NWlink{nuweb11b}{11b}.
+
+\item{}
+\end{list}
+\end{minipage}\vspace{4ex}
+\end{flushleft}
+\paragraph{}
+Основной цикл работы алгоритма Дейкстры.
+\begin{flushleft} \small
+\begin{minipage}{\linewidth}\label{scrap40}\raggedright\small
+\NWtarget{nuweb22b}{} $\langle\,${\itshape gimpl djk while}\nobreak\ {\footnotesize {22b}}$\,\rangle\equiv$
+\vspace{-1ex}
+\begin{list}{}{} \item
+\mbox{}\verb@@\\
+\mbox{}\verb@while (!q.empty()) {@\\
 \mbox{}\verb@        std::pair<double, int> from = q.top(); q.pop();@\\
 \mbox{}\verb@        for (auto& edge : edges[from.second]) {@\\
 \mbox{}\verb@            int to = edge.GetRight();@\\
@@ -780,41 +1189,49 @@ $W(e^*) \rightarrow \gamma W(e^*)$ сумма сетевых
 \mbox{}\verb@                }@\\
 \mbox{}\verb@            }@\\
 \mbox{}\verb@        }@\\
-\mbox{}\verb@    }@\\
-\mbox{}\verb@    double sum = 0;@\\
-\mbox{}\verb@    for (auto &i : dist)@\\
-\mbox{}\verb@        if (i != inf)@\\
-\mbox{}\verb@            sum += i;@\\
-\mbox{}\verb@    return sum;@\\
-\mbox{}\verb@}@\\
-\mbox{}\verb@@\\
-\mbox{}\verb@void Graph::RunDijkstraThread(int from, int len) {@\\
-\mbox{}\verb@    for (int i = from; i < from + len; ++i)@\\
-\mbox{}\verb@        distSum[i] = Dijkstra(i);@\\
-\mbox{}\verb@}@\\
-\mbox{}\verb@@\\
-\mbox{}\verb@void Graph::AddEdge(int index, int vertex, double weight, int id) {@\\
-\mbox{}\verb@    edges[index].insert(Edge(index, vertex, weight, id));@\\
-\mbox{}\verb@}@\\
-\mbox{}\verb@@\\
+\mbox{}\verb@    } @\\
 \mbox{}\verb@@{\NWsep}
 \end{list}
 \vspace{-1.5ex}
 \footnotesize
 \begin{list}{}{\setlength{\itemsep}{-\parsep}\setlength{\itemindent}{-\leftmargin}}
+\item \NWtxtMacroRefIn\ \NWlink{nuweb20}{20}.
 
 \item{}
 \end{list}
-\vspace{4ex}
+\end{minipage}\vspace{4ex}
 \end{flushleft}
 \paragraph{}
-Ниже приведен исходный код входной точки пограммы. 
-Имя файла и значение $\gamma$ передаются в качестве
-параметров интерфейса командной строки.
+Подсчет суммы сетевых расстояний.
+\begin{flushleft} \small
+\begin{minipage}{\linewidth}\label{scrap41}\raggedright\small
+\NWtarget{nuweb23}{} $\langle\,${\itshape gimpl djk sum}\nobreak\ {\footnotesize {23}}$\,\rangle\equiv$
+\vspace{-1ex}
+\begin{list}{}{} \item
+\mbox{}\verb@@\\
+\mbox{}\verb@double sum = 0;@\\
+\mbox{}\verb@    for (auto &i : dist)@\\
+\mbox{}\verb@        if (i != inf)@\\
+\mbox{}\verb@            sum += i; @\\
+\mbox{}\verb@@{\NWsep}
+\end{list}
+\vspace{-1.5ex}
+\footnotesize
+\begin{list}{}{\setlength{\itemsep}{-\parsep}\setlength{\itemindent}{-\leftmargin}}
+\item \NWtxtMacroRefIn\ \NWlink{nuweb20}{20}.
+
+\item{}
+\end{list}
+\end{minipage}\vspace{4ex}
+\end{flushleft}
+\paragraph{}
+Ниже приведен исходный код входной точки программы. 
+Имя файла содержащего данные о графе и значение 
+$\gamma$ передаются в качестве параметров интерфейса командной строки.
 
 \begin{flushleft} \small
-\begin{minipage}{\linewidth}\label{scrap22}\raggedright\small
-\NWtarget{nuweb17}{} \verb@"src/main.cpp"@\nobreak\ {\footnotesize {17}}$\equiv$
+\begin{minipage}{\linewidth}\label{scrap42}\raggedright\small
+\NWtarget{nuweb24}{} \verb@"src/main.cpp"@\nobreak\ {\footnotesize {24}}$\equiv$
 \vspace{-1ex}
 \begin{list}{}{} \item
 \mbox{}\verb@@\\
@@ -858,7 +1275,7 @@ $W(e^*) \rightarrow \gamma W(e^*)$ сумма сетевых
 \paragraph{Оптимизации:}
 Чтобы ускорить исполнение программы, из каждой
 вершины алгоритм Дейкстры запускается в отдельном
-потоке. Т.к. граф разрежен в памяти он хранится в
+потоке. Для экономии памяти граф хранится в
 виде списка смежности.
 
 \section{Результаты}
@@ -885,15 +1302,6 @@ $W(e^*) \rightarrow \gamma W(e^*)$ сумма сетевых
 ребро с соответствующей минимальной суммой сетевых расстояний. 
 На каждой итерации работы алгоритма Дейкстры получим сумму сетевых расстояний для исходного графа:
 
-\begin{gather}
-1 : 1 + 5 + 6 + 6 + 2 \\
-2 : 1 + 5 + 6 + 6 + 2 \\
-3 : 1 + 1 + 4 + 5 + 5 \\
-4 : 1 + 1 + 4 + 5 + 5 \\
-5 : 1 + 5 + 6 + 6 + 2 \\
-6 : 1 + 5 + 6 + 6 + 2
-\end{gather}
-
 Сумма сетевых расстояний в исходном графе $S = 112$. 
 
 \begin{figure}[h]
@@ -908,15 +1316,6 @@ $W(e^*) \rightarrow \gamma W(e^*)$ сумма сетевых
 $\gamma < 1$ приводит к минимизации суммы сетевых расстояний.
 При $\gamma = 0.5$ алгоритм меняет вес критического ребра на $0.5 \cdot w_i$ (рис.~\ref{fig:min_graph_2}).
 Для обновленного графа, в котором мы заменили вес критического ребра на 2 получим сумму сетевых расстояний:
-
-\begin{gather}
-1 : 1 + 3 + 4 + 4 + 2 \\
-2 : 1 + 3 + 4 + 4 + 2 \\
-3 : 1 + 1 + 2 + 3 + 3 \\
-4 : 1 + 1 + 2 + 3 + 3 \\
-5 : 1 + 3 + 4 + 4 + 2 \\
-6 : 1 + 3 + 4 + 4 + 2
-\end{gather}
 
 В таком случае сумма сетевых расстояний для обновленного графа будет равнятся $S^* = 76$.
 
@@ -933,15 +1332,6 @@ $\gamma < 1$ приводит к минимизации суммы сетевы�
 В обновленном графе, с весом критического ребра = 8 мы получим следующую
 сумму сетевых расстояний:
 
-\begin{gather}
-1 : 1 + 9 + 10 + 10 + 2 \\
-2 : 1 + 9 + 10 + 10 + 2 \\
-3 : 1 + 1 + 8  + 9  + 9 \\
-4 : 1 + 1 + 8  + 9  + 9 \\
-5 : 1 + 9 + 10 + 10 + 2 \\
-6 : 1 + 9 + 10 + 10 + 2
-\end{gather}
-
 Что дает сумму сетевых расстояний равную $S^* = 184$
 
 \subsection{Граф малого размера (20 вершин)}
@@ -950,7 +1340,7 @@ $\gamma < 1$ приводит к минимизации суммы сетевы�
 При запуске на графе малого размера (рис~\ref{fig:small}) 
 алгоритм корректно определил критическое ребро.
 Этому ребру был намеренно предан большой вес для удобства тестирования.
-При $k = 0.5$ и при $k = 1.5$ алгоритм определял одно
+При $\gamma = 0.5$ и при $\gamma = 1.5$ алгоритм определял одно
 и то же ребро между 19-й и 20-й вершинами (отмечено красным),
 однако изменение веса этого ребра приводило к разным итоговым
 суммам сетевых расстояний, а именно к $12542$ и $14264$ соотвественно.
@@ -966,7 +1356,7 @@ $\gamma < 1$ приводит к минимизации суммы сетевы�
 
 \paragraph{}
 В качестве графа среднего размера был взят сокращеное представление 
-транспортной сети города Владивостока на 2009-й год (рис.~\ref{vlad_2009}). 
+транспортной сети города Владивостока на 2009-й год (рис.~\ref{fig:vlad_2009}). 
 В данном представлении 1542 вершины и 1653 ребра.
 
 \begin{figure}[h]
@@ -977,10 +1367,12 @@ $\gamma < 1$ приводит к минимизации суммы сетевы�
 \end{figure}
 
 \paragraph{}
-Алгоритм был запущен с значениями $\gamma = 0.5$ и $\gamma = 1.5$ и определил 
-критическое ребро между 175й и 176й вершиной, на рис~\ref{fig:vlad_2009_min}. 
-При $\gamma = 0.5$ сумма сетевых расстояний составила $2.60341*10^{10}$. 
-При $\gamma = 1.5$ сумма сетевых расстояний составила $2.67274*10^{10}$.
+Алгоритм был запущен с значениями $\gamma = 0.5$ и $\gamma = 24.5$ и определил 
+критическое ребра между 175й и 176й вершиной и между 159-й и 160-й вершинами соответвенно.
+На рис~\ref{fig:vlad_2009_min} изображен граф с отмеченными найденными критическими ребрами.
+Исходная сумма сетевых расстояний составляет $2.64371\cdot10^{10}$.
+При $\gamma = 0.5$ сумма сетевых расстояний составила $2.60341\cdot10^{10}$. 
+При $\gamma = 24.5$ сумма сетевых расстояний составила $3.84203\cdot10^{10}$.
 
 \begin{figure}[h]
     \centering
@@ -999,7 +1391,7 @@ $\gamma < 1$ приводит к минимизации суммы сетевы�
 
 \begin{thebibliography}{9}
 \bibitem{dijkstra}
-Dijkstra E. W. \textit{A note on two problems in connexion with graphs} //
+Dijkstra E. W. \textit{A note on two problems in connection with graphs} //
 \textit{Numer. Math} — Springer Science+Business Media, 1959.
 — Vol. 1, Iss. 1. — P. 269–271.
 \end{thebibliography}
