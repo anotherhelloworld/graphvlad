@@ -392,6 +392,8 @@ double Graph::RunDijkstraAsync() {
     @<gimpl run cycle@>
     
     @<gimpl run sum@>
+
+    return sum;
 } 
 @}
 
@@ -667,7 +669,7 @@ int main(int argc, char* argv[]) {
     cout << "Read graph successfully" << endl;
     cout << "Counting original distances" << endl;
     cout << "Original distances: " << graph.RunDijkstraAsync() << endl;
-    double k = 1.5;
+    double k = 0.5;
     if (argc > 2)
         k = atof(argv[2]);
     cout << "Searching critical edge" << endl;
