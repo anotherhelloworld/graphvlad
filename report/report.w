@@ -893,7 +893,7 @@ $Sum_3 = 1 + 1 + 2 + 3 + 3 = 10$
 4 - 3 - 1 : weight sum = 4 \\
 4 - 3 - 2 : weight sum = 4 \\
 \end{gather}
-$Sum_4 = 1 + 1 + 3 + 4 + 4 = 10$
+$Sum_4 = 1 + 1 + 2 + 3 + 3 = 10$
 
 \paragraph{}
 
