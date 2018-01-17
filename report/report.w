@@ -33,7 +33,8 @@
 \thispagestyle{empty}
 \newpage
 
-
+\tableofcontents
+\listoffigures
 
 \newpage
 
@@ -72,6 +73,9 @@ $W(e^*) \rightarrow \gamma W(e^*)$ сумма сетевых
 Алгоритм реализован на языке C++. Основной процедурой является
 алгоритм Дейкстры\cite{dijkstra}.
 
+\subsection{Содержание исходного кода}
+
+@m
 
 \subsection{Исходный код}
 \paragraph{}
