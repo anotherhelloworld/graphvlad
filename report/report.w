@@ -983,6 +983,12 @@ $Sum_6 = 1 + 3 + 4 + 4 + 2 = 14$
 При $\gamma = 0.5$ сумма сетевых расстояний составила $2.60341\cdot10^{10}$. 
 При $\gamma = 24.5$ сумма сетевых расстояний составила $3.84203\cdot10^{10}$.
 
+\paragraph{}
+
+Без флага оптимизации "-O2" нашей программе потребовалось 7 минут 39 секнуд реального времени.
+С флагом оптимизации "-O2" нашей программе потребовалось 45 секунд реального времени.
+Программа использовала 16 потоков. Время измерялось утилитой time.
+
 \begin{figure}[h]
     \centering
     \includegraphics[scale=0.3]{vlad_2009_min.png}
@@ -1004,5 +1010,8 @@ Dijkstra E. W. \textit{A note on two problems in connection with graphs} //
 \textit{Numer. Math} — Springer Science+Business Media, 1959.
 — Vol. 1, Iss. 1. — P. 269–271.
 \end{thebibliography}
+
+Для визуализации графов использовалась программа с открытым исходным кодом $gephi$.
+\url{https://github.com/gephi/gephi}
 
 \end{document}
