@@ -67,20 +67,22 @@ $W(e^*) \rightarrow \gamma W(e^*)$ сумма сетевых
 
 \paragraph{}
 Для нахождения суммы сетевых расстояний в графе использовался
-алгоритм Дейкстры\cite{dijkstra}. Не смотря на то, что алгоритм
-Дейкстры не подходит для не связных графов, то, что он запускается
+алгоритм Дейкстры\cite{dijkstra}. Несмотря на то, что алгоритм
+Дейкстры не подходит для несвязных графов, то, что он запускается
 из каждой вершины позволяет его использовать, чтобы посчитать необходимую сумм.
 
 \paragraph{}
 Чтобы найти критическое ребро сумма сетевых расстояний считается
-для всех подграфов $G_i$, где $W(e_i) \rightarrow \gamma W(e_i)$. Если сумма сетевых
-ребер в текущем подграфе $G_i$ меньше (больше при $\gamma > 1$)
-ранее найденой суммы, то это ребро сохраняется в качестве претендента
+для всех графов $G_i$ таких, что $W(e_i) \rightarrow \gamma W(e_i)$. Если сетевые суммы 
+в текущем графе $G_i$ меньше (больше при $\gamma > 1$)
+ранее найденной суммы, то это ребро сохраняется в качестве претендента
 на критическое. В конце работы алгоритма мы получаем критическое ребро, 
 сумму сетевых расстояний, соответствующую графу с обновленным весом критического ребра и новый вес данного ребра.
 
 \section{Реализация} 
 В начале выполнения программы происходит считывание графа из файла. 
+Во входном файле граф описывается в формате: $u v weight$, где $u$ и $v$ - номера вершин(тип $integer$), 
+$weight$ - вес ребра (тип $double$).
 Затем для каждой вершины запускаем алгоритм Дейкстры. В данной рализации можно было бы использовать 
 алгоритм Флойда-Уоршелла, но было принято решение реализовать алгоритм Дейкстры, так как он легче поддается распараллеливанию.
 
@@ -101,19 +103,20 @@ $W(e^*) \rightarrow \gamma W(e^*)$ сумма сетевых
 \item $\langle\,$gimpl critical min\nobreak\ {\footnotesize \NWlink{nuweb21}{21}}$\,\rangle$ {\footnotesize {\NWtxtRefIn} \NWlink{nuweb19a}{19a}.}
 \item $\langle\,$gimpl critical print\nobreak\ {\footnotesize \NWlink{nuweb20}{20}}$\,\rangle$ {\footnotesize {\NWtxtRefIn} \NWlink{nuweb19a}{19a}.}
 \item $\langle\,$gimpl critical search\nobreak\ {\footnotesize \NWlink{nuweb19a}{19a}}$\,\rangle$ {\footnotesize {\NWtxtRefIn} \NWlink{nuweb13b}{13b}.}
-\item $\langle\,$gimpl dijkstra\nobreak\ {\footnotesize \NWlink{nuweb16b}{16b}}$\,\rangle$ {\footnotesize {\NWtxtRefIn} \NWlink{nuweb13b}{13b}.}
+\item $\langle\,$gimpl dijkstra\nobreak\ {\footnotesize \NWlink{nuweb17a}{17a}}$\,\rangle$ {\footnotesize {\NWtxtRefIn} \NWlink{nuweb13b}{13b}.}
 \item $\langle\,$gimpl Dijkstra algorythm\nobreak\ {\footnotesize \NWlink{nuweb23}{23}}$\,\rangle$ {\footnotesize {\NWtxtRefIn} \NWlink{nuweb13b}{13b}.}
 \item $\langle\,$gimpl djk sum\nobreak\ {\footnotesize \NWlink{nuweb26}{26}}$\,\rangle$ {\footnotesize {\NWtxtRefIn} \NWlink{nuweb23}{23}.}
 \item $\langle\,$gimpl djk vars\nobreak\ {\footnotesize \NWlink{nuweb24a}{24a}}$\,\rangle$ {\footnotesize {\NWtxtRefIn} \NWlink{nuweb23}{23}.}
 \item $\langle\,$gimpl djk while\nobreak\ {\footnotesize \NWlink{nuweb25b}{25b}}$\,\rangle$ {\footnotesize {\NWtxtRefIn} \NWlink{nuweb23}{23}.}
 \item $\langle\,$gimpl open\nobreak\ {\footnotesize \NWlink{nuweb14b}{14b}}$\,\rangle$ {\footnotesize {\NWtxtRefIn} \NWlink{nuweb13b}{13b}.}
-\item $\langle\,$gimpl open for\nobreak\ {\footnotesize \NWlink{nuweb16a}{16a}}$\,\rangle$ {\footnotesize {\NWtxtRefIn} \NWlink{nuweb14b}{14b}.}
+\item $\langle\,$gimpl open for\nobreak\ {\footnotesize \NWlink{nuweb16b}{16b}}$\,\rangle$ {\footnotesize {\NWtxtRefIn} \NWlink{nuweb14b}{14b}.}
+\item $\langle\,$gimpl open if\nobreak\ {\footnotesize \NWlink{nuweb16a}{16a}}$\,\rangle$ {\footnotesize {\NWtxtRefIn} \NWlink{nuweb15}{15}.}
 \item $\langle\,$gimpl open while\nobreak\ {\footnotesize \NWlink{nuweb15}{15}}$\,\rangle$ {\footnotesize {\NWtxtRefIn} \NWlink{nuweb14b}{14b}.}
-\item $\langle\,$gimpl run cycle\nobreak\ {\footnotesize \NWlink{nuweb18a}{18a}}$\,\rangle$ {\footnotesize {\NWtxtRefIn} \NWlink{nuweb16b}{16b}.}
+\item $\langle\,$gimpl run cycle\nobreak\ {\footnotesize \NWlink{nuweb18a}{18a}}$\,\rangle$ {\footnotesize {\NWtxtRefIn} \NWlink{nuweb17a}{17a}.}
 \item $\langle\,$gimpl run Dijkstra\nobreak\ {\footnotesize \NWlink{nuweb24b}{24b}}$\,\rangle$ {\footnotesize {\NWtxtRefIn} \NWlink{nuweb13b}{13b}.}
-\item $\langle\,$gimpl run sum\nobreak\ {\footnotesize \NWlink{nuweb18b}{18b}}$\,\rangle$ {\footnotesize {\NWtxtRefIn} \NWlink{nuweb16b}{16b}.}
-\item $\langle\,$gimpl run threads\nobreak\ {\footnotesize \NWlink{nuweb17b}{17b}}$\,\rangle$ {\footnotesize {\NWtxtRefIn} \NWlink{nuweb16b}{16b}.}
-\item $\langle\,$gimpl run threadscount\nobreak\ {\footnotesize \NWlink{nuweb17a}{17a}}$\,\rangle$ {\footnotesize {\NWtxtRefIn} \NWlink{nuweb16b}{16b}.}
+\item $\langle\,$gimpl run sum\nobreak\ {\footnotesize \NWlink{nuweb18b}{18b}}$\,\rangle$ {\footnotesize {\NWtxtRefIn} \NWlink{nuweb17a}{17a}.}
+\item $\langle\,$gimpl run threads\nobreak\ {\footnotesize \NWlink{nuweb17c}{17c}}$\,\rangle$ {\footnotesize {\NWtxtRefIn} \NWlink{nuweb17a}{17a}.}
+\item $\langle\,$gimpl run threadscount\nobreak\ {\footnotesize \NWlink{nuweb17b}{17b}}$\,\rangle$ {\footnotesize {\NWtxtRefIn} \NWlink{nuweb17a}{17a}.}
 \item $\langle\,$graph add edge\nobreak\ {\footnotesize \NWlink{nuweb12d}{12d}}$\,\rangle$ {\footnotesize {\NWtxtRefIn} \NWlink{nuweb8}{8}.}
 \item $\langle\,$graph constructors\nobreak\ {\footnotesize \NWlink{nuweb9b}{9b}}$\,\rangle$ {\footnotesize {\NWtxtRefIn} \NWlink{nuweb8}{8}.}
 \item $\langle\,$graph data\nobreak\ {\footnotesize \NWlink{nuweb11b}{11b}}$\,\rangle$ {\footnotesize {\NWtxtRefIn} \NWlink{nuweb8}{8}.}
@@ -635,7 +638,7 @@ $W(e^*) \rightarrow \gamma W(e^*)$ сумма сетевых
 \mbox{}\verb@//Public methods@\\
 \mbox{}\verb@@\hbox{$\langle\,${\itshape gimpl constructors}\nobreak\ {\footnotesize \NWlink{nuweb14a}{14a}}$\,\rangle$}\verb@@\\
 \mbox{}\verb@@\hbox{$\langle\,${\itshape gimpl open}\nobreak\ {\footnotesize \NWlink{nuweb14b}{14b}}$\,\rangle$}\verb@@\\
-\mbox{}\verb@@\hbox{$\langle\,${\itshape gimpl dijkstra}\nobreak\ {\footnotesize \NWlink{nuweb16b}{16b}}$\,\rangle$}\verb@@\\
+\mbox{}\verb@@\hbox{$\langle\,${\itshape gimpl dijkstra}\nobreak\ {\footnotesize \NWlink{nuweb17a}{17a}}$\,\rangle$}\verb@@\\
 \mbox{}\verb@@\hbox{$\langle\,${\itshape gimpl critical search}\nobreak\ {\footnotesize \NWlink{nuweb19a}{19a}}$\,\rangle$}\verb@@\\
 \mbox{}\verb@@\hbox{$\langle\,${\itshape gimpl Dijkstra algorythm}\nobreak\ {\footnotesize \NWlink{nuweb23}{23}}$\,\rangle$}\verb@@\\
 \mbox{}\verb@@\hbox{$\langle\,${\itshape gimpl run Dijkstra}\nobreak\ {\footnotesize \NWlink{nuweb24b}{24b}}$\,\rangle$}\verb@@\\
@@ -694,7 +697,7 @@ $W(e^*) \rightarrow \gamma W(e^*)$ сумма сетевых
 \mbox{}\verb@        int id = 0;@\\
 \mbox{}\verb@        @\hbox{$\langle\,${\itshape gimpl open while}\nobreak\ {\footnotesize \NWlink{nuweb15}{15}}$\,\rangle$}\verb@@\\
 \mbox{}\verb@@\\
-\mbox{}\verb@        @\hbox{$\langle\,${\itshape gimpl open for}\nobreak\ {\footnotesize \NWlink{nuweb16a}{16a}}$\,\rangle$}\verb@@\\
+\mbox{}\verb@        @\hbox{$\langle\,${\itshape gimpl open for}\nobreak\ {\footnotesize \NWlink{nuweb16b}{16b}}$\,\rangle$}\verb@@\\
 \mbox{}\verb@    }@\\
 \mbox{}\verb@    distSum.resize(edges.size(), 0);@\\
 \mbox{}\verb@} @\\
@@ -726,20 +729,10 @@ std::vector более оптимизирован для работы с раз�
 \mbox{}\verb@          int v;@\\
 \mbox{}\verb@          int u;@\\
 \mbox{}\verb@          in >> index >> vertex >> weight;@\\
-\mbox{}\verb@          if (coord.find(index) != coord.end()) {@\\
-\mbox{}\verb@              v = coord[index];@\\
-\mbox{}\verb@          }@\\
-\mbox{}\verb@          else {@\\
-\mbox{}\verb@              v = n++;@\\
-\mbox{}\verb@              coord.insert(std::make_pair(index, v));@\\
-\mbox{}\verb@          }@\\
-\mbox{}\verb@          if (coord.find(vertex) != coord.end()) {@\\
-\mbox{}\verb@              u = coord[vertex];@\\
-\mbox{}\verb@          }@\\
-\mbox{}\verb@          else {@\\
-\mbox{}\verb@              u = n++;@\\
-\mbox{}\verb@              coord.insert(std::make_pair(vertex, u));@\\
-\mbox{}\verb@          }@\\
+\mbox{}\verb@@\\
+\mbox{}\verb@          @\hbox{$\langle\,${\itshape gimpl open if}\nobreak\ {\footnotesize \NWlink{nuweb16a}{16a}}$\,\rangle$}\verb@@\\
+\mbox{}\verb@@\\
+\mbox{}\verb@          @\\
 \mbox{}\verb@          AddEdge(u, v, weight, id++);@\\
 \mbox{}\verb@          AddEdge(v, u, weight, id++);@\\
 \mbox{}\verb@} @\\
@@ -755,11 +748,44 @@ std::vector более оптимизирован для работы с раз�
 \end{minipage}\vspace{4ex}
 \end{flushleft}
 \paragraph{}
-Цикл, предназначенный для сохранения графа в виде списка смежности.
-
+Проверка на то, не встречалась ли нам эта вершина ранее в процессе считывания исходного графа.
 \begin{flushleft} \small
 \begin{minipage}{\linewidth}\label{scrap25}\raggedright\small
-\NWtarget{nuweb16a}{} $\langle\,${\itshape gimpl open for}\nobreak\ {\footnotesize {16a}}$\,\rangle\equiv$
+\NWtarget{nuweb16a}{} $\langle\,${\itshape gimpl open if}\nobreak\ {\footnotesize {16a}}$\,\rangle\equiv$
+\vspace{-1ex}
+\begin{list}{}{} \item
+\mbox{}\verb@@\\
+\mbox{}\verb@if (coord.find(index) != coord.end()) {@\\
+\mbox{}\verb@    v = coord[index];@\\
+\mbox{}\verb@} @\\
+\mbox{}\verb@else {@\\
+\mbox{}\verb@    v = n++;@\\
+\mbox{}\verb@    coord.insert(std::make_pair(index, v));@\\
+\mbox{}\verb@}@\\
+\mbox{}\verb@if (coord.find(vertex) != coord.end()) {@\\
+\mbox{}\verb@    u = coord[vertex];@\\
+\mbox{}\verb@}@\\
+\mbox{}\verb@else {@\\
+\mbox{}\verb@    u = n++;@\\
+\mbox{}\verb@    coord.insert(std::make_pair(vertex, u));@\\
+\mbox{}\verb@}@\\
+\mbox{}\verb@@{\NWsep}
+\end{list}
+\vspace{-1.5ex}
+\footnotesize
+\begin{list}{}{\setlength{\itemsep}{-\parsep}\setlength{\itemindent}{-\leftmargin}}
+\item \NWtxtMacroRefIn\ \NWlink{nuweb15}{15}.
+
+\item{}
+\end{list}
+\end{minipage}\vspace{4ex}
+\end{flushleft}
+\paragraph{}
+Цикл, предназначенный для сохранения графа в памяти виде списка смежности.
+
+\begin{flushleft} \small
+\begin{minipage}{\linewidth}\label{scrap26}\raggedright\small
+\NWtarget{nuweb16b}{} $\langle\,${\itshape gimpl open for}\nobreak\ {\footnotesize {16b}}$\,\rangle\equiv$
 \vspace{-1ex}
 \begin{list}{}{} \item
 \mbox{}\verb@@\\
@@ -780,15 +806,15 @@ std::vector более оптимизирован для работы с раз�
 Функция, создающая отдельные потоки, в которых мы будем запускать алгоритм Дейкстры.
 
 \begin{flushleft} \small
-\begin{minipage}{\linewidth}\label{scrap26}\raggedright\small
-\NWtarget{nuweb16b}{} $\langle\,${\itshape gimpl dijkstra}\nobreak\ {\footnotesize {16b}}$\,\rangle\equiv$
+\begin{minipage}{\linewidth}\label{scrap27}\raggedright\small
+\NWtarget{nuweb17a}{} $\langle\,${\itshape gimpl dijkstra}\nobreak\ {\footnotesize {17a}}$\,\rangle\equiv$
 \vspace{-1ex}
 \begin{list}{}{} \item
 \mbox{}\verb@@\\
 \mbox{}\verb@double Graph::RunDijkstraAsync() {@\\
-\mbox{}\verb@    @\hbox{$\langle\,${\itshape gimpl run threadscount}\nobreak\ {\footnotesize \NWlink{nuweb17a}{17a}}$\,\rangle$}\verb@@\\
+\mbox{}\verb@    @\hbox{$\langle\,${\itshape gimpl run threadscount}\nobreak\ {\footnotesize \NWlink{nuweb17b}{17b}}$\,\rangle$}\verb@@\\
 \mbox{}\verb@@\\
-\mbox{}\verb@    @\hbox{$\langle\,${\itshape gimpl run threads}\nobreak\ {\footnotesize \NWlink{nuweb17b}{17b}}$\,\rangle$}\verb@@\\
+\mbox{}\verb@    @\hbox{$\langle\,${\itshape gimpl run threads}\nobreak\ {\footnotesize \NWlink{nuweb17c}{17c}}$\,\rangle$}\verb@@\\
 \mbox{}\verb@@\\
 \mbox{}\verb@    int batch = edges.size() / threads_count;@\\
 \mbox{}\verb@    int remainder = edges.size() % threads_count;@\\
@@ -811,10 +837,10 @@ std::vector более оптимизирован для работы с раз�
 \end{minipage}\vspace{4ex}
 \end{flushleft}
 \paragraph{}
-Колличество потоков, в которых будем запускать алгоритм Дейкстры.
+Количество потоков, в которых будем запускать алгоритм Дейкстры.
 \begin{flushleft} \small
-\begin{minipage}{\linewidth}\label{scrap27}\raggedright\small
-\NWtarget{nuweb17a}{} $\langle\,${\itshape gimpl run threadscount}\nobreak\ {\footnotesize {17a}}$\,\rangle\equiv$
+\begin{minipage}{\linewidth}\label{scrap28}\raggedright\small
+\NWtarget{nuweb17b}{} $\langle\,${\itshape gimpl run threadscount}\nobreak\ {\footnotesize {17b}}$\,\rangle\equiv$
 \vspace{-1ex}
 \begin{list}{}{} \item
 \mbox{}\verb@@\\
@@ -824,7 +850,7 @@ std::vector более оптимизирован для работы с раз�
 \vspace{-1.5ex}
 \footnotesize
 \begin{list}{}{\setlength{\itemsep}{-\parsep}\setlength{\itemindent}{-\leftmargin}}
-\item \NWtxtMacroRefIn\ \NWlink{nuweb16b}{16b}.
+\item \NWtxtMacroRefIn\ \NWlink{nuweb17a}{17a}.
 
 \item{}
 \end{list}
@@ -833,8 +859,8 @@ std::vector более оптимизирован для работы с раз�
 \paragraph{}
 Массив для хранения указателей на потоки.
 \begin{flushleft} \small
-\begin{minipage}{\linewidth}\label{scrap28}\raggedright\small
-\NWtarget{nuweb17b}{} $\langle\,${\itshape gimpl run threads}\nobreak\ {\footnotesize {17b}}$\,\rangle\equiv$
+\begin{minipage}{\linewidth}\label{scrap29}\raggedright\small
+\NWtarget{nuweb17c}{} $\langle\,${\itshape gimpl run threads}\nobreak\ {\footnotesize {17c}}$\,\rangle\equiv$
 \vspace{-1ex}
 \begin{list}{}{} \item
 \mbox{}\verb@@\\
@@ -844,7 +870,7 @@ std::vector более оптимизирован для работы с раз�
 \vspace{-1.5ex}
 \footnotesize
 \begin{list}{}{\setlength{\itemsep}{-\parsep}\setlength{\itemindent}{-\leftmargin}}
-\item \NWtxtMacroRefIn\ \NWlink{nuweb16b}{16b}.
+\item \NWtxtMacroRefIn\ \NWlink{nuweb17a}{17a}.
 
 \item{}
 \end{list}
@@ -853,7 +879,7 @@ std::vector более оптимизирован для работы с раз�
 \paragraph{}
 Цикл, создающий отдельные потоки, указатели на которые сохраняются в массиве.
 \begin{flushleft} \small
-\begin{minipage}{\linewidth}\label{scrap29}\raggedright\small
+\begin{minipage}{\linewidth}\label{scrap30}\raggedright\small
 \NWtarget{nuweb18a}{} $\langle\,${\itshape gimpl run cycle}\nobreak\ {\footnotesize {18a}}$\,\rangle\equiv$
 \vspace{-1ex}
 \begin{list}{}{} \item
@@ -879,7 +905,7 @@ std::vector более оптимизирован для работы с раз�
 \vspace{-1.5ex}
 \footnotesize
 \begin{list}{}{\setlength{\itemsep}{-\parsep}\setlength{\itemindent}{-\leftmargin}}
-\item \NWtxtMacroRefIn\ \NWlink{nuweb16b}{16b}.
+\item \NWtxtMacroRefIn\ \NWlink{nuweb17a}{17a}.
 
 \item{}
 \end{list}
@@ -888,7 +914,7 @@ std::vector более оптимизирован для работы с раз�
 \paragraph{}
 Суммируем все полученные сетевые расстояния
 \begin{flushleft} \small
-\begin{minipage}{\linewidth}\label{scrap30}\raggedright\small
+\begin{minipage}{\linewidth}\label{scrap31}\raggedright\small
 \NWtarget{nuweb18b}{} $\langle\,${\itshape gimpl run sum}\nobreak\ {\footnotesize {18b}}$\,\rangle\equiv$
 \vspace{-1ex}
 \begin{list}{}{} \item
@@ -901,7 +927,7 @@ std::vector более оптимизирован для работы с раз�
 \vspace{-1.5ex}
 \footnotesize
 \begin{list}{}{\setlength{\itemsep}{-\parsep}\setlength{\itemindent}{-\leftmargin}}
-\item \NWtxtMacroRefIn\ \NWlink{nuweb16b}{16b}.
+\item \NWtxtMacroRefIn\ \NWlink{nuweb17a}{17a}.
 
 \item{}
 \end{list}
@@ -911,7 +937,7 @@ std::vector более оптимизирован для работы с раз�
 Основная функция программы, которая выполняет поиск критического ребра
 
 \begin{flushleft} \small
-\begin{minipage}{\linewidth}\label{scrap31}\raggedright\small
+\begin{minipage}{\linewidth}\label{scrap32}\raggedright\small
 \NWtarget{nuweb19a}{} $\langle\,${\itshape gimpl critical search}\nobreak\ {\footnotesize {19a}}$\,\rangle\equiv$
 \vspace{-1ex}
 \begin{list}{}{} \item
@@ -943,7 +969,7 @@ std::vector более оптимизирован для работы с раз�
 \paragraph{}
 Инициализация необходимых перменных.
 \begin{flushleft} \small
-\begin{minipage}{\linewidth}\label{scrap32}\raggedright\small
+\begin{minipage}{\linewidth}\label{scrap33}\raggedright\small
 \NWtarget{nuweb19b}{} $\langle\,${\itshape gimpl critical init}\nobreak\ {\footnotesize {19b}}$\,\rangle\equiv$
 \vspace{-1ex}
 \begin{list}{}{} \item
@@ -967,7 +993,7 @@ std::vector более оптимизирован для работы с раз�
 \paragraph{}
 Вывод ответа.
 \begin{flushleft} \small
-\begin{minipage}{\linewidth}\label{scrap33}\raggedright\small
+\begin{minipage}{\linewidth}\label{scrap34}\raggedright\small
 \NWtarget{nuweb20}{} $\langle\,${\itshape gimpl critical print}\nobreak\ {\footnotesize {20}}$\,\rangle\equiv$
 \vspace{-1ex}
 \begin{list}{}{} \item
@@ -995,7 +1021,7 @@ std::vector более оптимизирован для работы с раз�
 \paragraph{}
 Код отвечающий за поиск критического ребра в случае, при $\gamma \leq 1$
 \begin{flushleft} \small
-\begin{minipage}{\linewidth}\label{scrap34}\raggedright\small
+\begin{minipage}{\linewidth}\label{scrap35}\raggedright\small
 \NWtarget{nuweb21}{} $\langle\,${\itshape gimpl critical min}\nobreak\ {\footnotesize {21}}$\,\rangle\equiv$
 \vspace{-1ex}
 \begin{list}{}{} \item
@@ -1053,7 +1079,7 @@ std::vector более оптимизирован для работы с раз�
 \paragraph{}
 Код отвечающий за поиск критического ребра при $\gamma > 1$ 
 
-\begin{flushleft} \small\label{scrap35}\raggedright\small
+\begin{flushleft} \small\label{scrap36}\raggedright\small
 \NWtarget{nuweb22}{} $\langle\,${\itshape gimpl critical max}\nobreak\ {\footnotesize {22}}$\,\rangle\equiv$
 \vspace{-1ex}
 \begin{list}{}{} \item
@@ -1111,7 +1137,7 @@ std::vector более оптимизирован для работы с раз�
 \paragraph{}
 Реализация алгоритма Дейкстры \cite{Dijkstra}
 \begin{flushleft} \small
-\begin{minipage}{\linewidth}\label{scrap36}\raggedright\small
+\begin{minipage}{\linewidth}\label{scrap37}\raggedright\small
 \NWtarget{nuweb23}{} $\langle\,${\itshape gimpl Dijkstra algorythm}\nobreak\ {\footnotesize {23}}$\,\rangle\equiv$
 \vspace{-1ex}
 \begin{list}{}{} \item
@@ -1142,7 +1168,7 @@ std::vector более оптимизирован для работы с раз�
 Инициализация массивов для хранения дистанций и посещенных вершин.
 В очереди с приоритетами $q$, хранится пара: вес, ребро.
 \begin{flushleft} \small
-\begin{minipage}{\linewidth}\label{scrap37}\raggedright\small
+\begin{minipage}{\linewidth}\label{scrap38}\raggedright\small
 \NWtarget{nuweb24a}{} $\langle\,${\itshape gimpl djk vars}\nobreak\ {\footnotesize {24a}}$\,\rangle\equiv$
 \vspace{-1ex}
 \begin{list}{}{} \item
@@ -1171,7 +1197,7 @@ std::vector более оптимизирован для работы с раз�
 \paragraph{}
 Функция, которая запускает алгоритм Дейкстры на указанных вершинах.
 \begin{flushleft} \small
-\begin{minipage}{\linewidth}\label{scrap38}\raggedright\small
+\begin{minipage}{\linewidth}\label{scrap39}\raggedright\small
 \NWtarget{nuweb24b}{} $\langle\,${\itshape gimpl run Dijkstra}\nobreak\ {\footnotesize {24b}}$\,\rangle\equiv$
 \vspace{-1ex}
 \begin{list}{}{} \item
@@ -1194,7 +1220,7 @@ std::vector более оптимизирован для работы с раз�
 \paragraph{}
 Фукнция добавляющая ребро в граф.
 \begin{flushleft} \small
-\begin{minipage}{\linewidth}\label{scrap39}\raggedright\small
+\begin{minipage}{\linewidth}\label{scrap40}\raggedright\small
 \NWtarget{nuweb25a}{} $\langle\,${\itshape gimpl add edge}\nobreak\ {\footnotesize {25a}}$\,\rangle\equiv$
 \vspace{-1ex}
 \begin{list}{}{} \item
@@ -1216,7 +1242,7 @@ std::vector более оптимизирован для работы с раз�
 \paragraph{}
 Основной цикл работы алгоритма Дейкстры.
 \begin{flushleft} \small
-\begin{minipage}{\linewidth}\label{scrap40}\raggedright\small
+\begin{minipage}{\linewidth}\label{scrap41}\raggedright\small
 \NWtarget{nuweb25b}{} $\langle\,${\itshape gimpl djk while}\nobreak\ {\footnotesize {25b}}$\,\rangle\equiv$
 \vspace{-1ex}
 \begin{list}{}{} \item
@@ -1249,7 +1275,7 @@ std::vector более оптимизирован для работы с раз�
 \paragraph{}
 Подсчет суммы сетевых расстояний.
 \begin{flushleft} \small
-\begin{minipage}{\linewidth}\label{scrap41}\raggedright\small
+\begin{minipage}{\linewidth}\label{scrap42}\raggedright\small
 \NWtarget{nuweb26}{} $\langle\,${\itshape gimpl djk sum}\nobreak\ {\footnotesize {26}}$\,\rangle\equiv$
 \vspace{-1ex}
 \begin{list}{}{} \item
@@ -1275,7 +1301,7 @@ std::vector более оптимизирован для работы с раз�
 $\gamma$ передаются в качестве параметров интерфейса командной строки.
 
 \begin{flushleft} \small
-\begin{minipage}{\linewidth}\label{scrap42}\raggedright\small
+\begin{minipage}{\linewidth}\label{scrap43}\raggedright\small
 \NWtarget{nuweb27}{} \verb@"src/main.cpp"@\nobreak\ {\footnotesize {27}}$\equiv$
 \vspace{-1ex}
 \begin{list}{}{} \item
@@ -1345,9 +1371,99 @@ $\gamma$ передаются в качестве параметров инте�
 Затем для данной итерации пересчитаем сумму сетевых расстояний, и, если она меньше текущей минимальной суммы,
 то обновим минимум. Так в процессе работы алгоритма мы переберем все ребра и в качестве критического выберем 
 ребро с соответствующей минимальной суммой сетевых расстояний. 
-На каждой итерации работы алгоритма Дейкстры получим сумму сетевых расстояний для исходного графа:
 
-Сумма сетевых расстояний в исходном графе $S = 112$. 
+\paragraph{}
+
+На каждой итерации работы алгоритма Дейкстры получим сумму сетевых расстояний для исходного графа:
+Соответственно для каждой веришны имеем следующую сумму сетевых расстояний:
+
+\paragraph{}
+
+Для первой веришны сумма сетевых расстояний будет состоять из сумм представленных ниже 
+путей от первой вершины графа к остальным.
+Далее через тире обозначенны вершины графа и сумма весов всех ребер в данном пути:
+\begin{gather}
+1 - 3 : weight sum = 1 \\
+1 - 3 - 4 : weight sum = 5 \\
+1 - 3 - 4 - 5 : weight sum = 6 \\
+1 - 3 - 4 - 6 : weight sum = 6 \\
+1 - 2 : weight sum = 2
+\end{gather}
+$Sum_1 = 1 + 5 + 6 + 6 + 2 = 20$
+
+\paragraph{}
+
+Для второй веришны сумма сетевых расстояний будет состоять из сумм представленных ниже 
+путей от второй вершины графа к остальным.
+Далее через тире обозначенны вершины графа и сумма весов всех ребер в данном пути:
+\begin{gather}
+2 - 3 : weight sum = 1 \\
+2 - 3 - 4 : weight sum = 5 \\
+2 - 3 - 4 - 5 : weight sum = 6 \\
+2 - 3 - 4 - 6 : weight sum = 6 \\
+2 - 1 : weight sum = 2
+\end{gather}
+$Sum_2 = 1 + 5 + 6 + 6 + 2 = 20$
+
+\paragraph{}
+
+Для третьей веришны сумма сетевых расстояний будет состоять из сумм представленных ниже 
+путей от третьей вершины графа к остальным.
+Далее через тире обозначенны вершины графа и сумма весов всех ребер в данном пути:
+\begin{gather}
+3 - 1 : weight sum = 1 \\
+3 - 2 : weight sum = 1 \\
+3 - 4 : weight sum = 4 \\
+3 - 4 - 5 : weight sum = 5 \\
+3 - 4 - 6 : weight sum = 5 \\
+\end{gather}
+$Sum_3 = 1 + 1 + 4 + 5 + 5 = 16$
+
+\paragraph{}
+
+Для четвертой веришны сумма сетевых расстояний будет состоять из сумм представленных ниже 
+путей от четвертой вершины графа к остальным.
+Далее через тире обозначенны вершины графа и сумма весов всех ребер в данном пути:
+\begin{gather}
+4 - 5 : weight sum = 1 \\
+4 - 6 : weight sum = 1 \\
+4 - 3 : weight sum = 4 \\
+4 - 3 - 1 : weight sum = 5 \\
+4 - 3 - 2 : weight sum = 5 \\
+\end{gather}
+$Sum_4 = 1 + 1 + 4 + 5 + 5 = 16$
+
+\paragraph{}
+
+Для пятой веришны сумма сетевых расстояний будет состоять из сумм представленных ниже 
+путей от пятой вершины графа к остальным.
+Далее через тире обозначенны вершины графа и сумма весов всех ребер в данном пути:
+\begin{gather}
+5 - 3 : weight sum = 1 \\
+5 - 4 - 3 : weight sum = 5 \\
+5 - 4 - 3 - 1 : weight sum = 6 \\
+5 - 4 - 3 - 2 : weight sum = 6 \\
+5 - 6 : weight sum = 2
+\end{gather}
+$Sum_5 = 1 + 5 + 6 + 6 + 2 = 20$
+
+\paragraph{}
+
+Для шестой веришны сумма сетевых расстояний будет состоять из сумм представленных ниже 
+путей от шестой вершины графа к остальным.
+Далее через тире обозначенны вершины графа и сумма весов всех ребер в данном пути:
+\begin{gather}
+5 - 3 : weight sum = 1 \\
+5 - 4 - 3 : weight sum = 5 \\
+5 - 4 - 3 - 1 : weight sum = 6 \\
+5 - 4 - 3 - 2 : weight sum = 6 \\
+5 - 6 : weight sum = 2
+\end{gather}
+$Sum_6 = 1 + 5 + 6 + 6 + 2 = 20$
+
+\paragraph{}
+
+Таким образом получим сумму сетевых расстояний в исхожном графе $S = 20 + 20 + 16 + 16 + 20 + 20 = 112$.
 
 \begin{figure}[h]
     \centering
@@ -1360,9 +1476,100 @@ $\gamma$ передаются в качестве параметров инте�
 3й и 4й вершинами и умножение его веса на
 $\gamma < 1$ приводит к минимизации суммы сетевых расстояний.
 При $\gamma = 0.5$ алгоритм меняет вес критического ребра на $0.5 \cdot w_i$ (рис.~\ref{fig:min_graph_2}).
-Для обновленного графа, в котором мы заменили вес критического ребра на 2 получим сумму сетевых расстояний:
 
-В таком случае сумма сетевых расстояний для обновленного графа будет равнятся $S^* = 76$.
+\paragraph{}
+
+На каждой итерации работы алгоритма Дейкстры получим сумму сетевых расстояний для обновленного графа:
+Соответственно для каждой веришны имеем следующую сумму сетевых расстояний:
+
+\paragraph{}
+
+Для первой веришны сумма сетевых расстояний будет состоять из сумм представленных ниже 
+путей от первой вершины графа к остальным.
+Далее через тире обозначенны вершины графа и сумма весов всех ребер в данном пути:
+\begin{gather}
+1 - 3 : weight sum = 1 \\
+1 - 3 - 4 : weight sum = 3 \\
+1 - 3 - 4 - 5 : weight sum = 4 \\
+1 - 3 - 4 - 6 : weight sum = 4 \\
+1 - 2 : weight sum = 2
+\end{gather}
+$Sum_1 = 1 + 3 + 4 + 4 + 2 = 14$
+
+\paragraph{}
+
+Для второй веришны сумма сетевых расстояний будет состоять из сумм представленных ниже 
+путей от второй вершины графа к остальным.
+Далее через тире обозначенны вершины графа и сумма весов всех ребер в данном пути:
+\begin{gather}
+2 - 3 : weight sum = 1 \\
+2 - 3 - 4 : weight sum = 3 \\
+2 - 3 - 4 - 5 : weight sum = 4 \\
+2 - 3 - 4 - 6 : weight sum = 4 \\
+2 - 1 : weight sum = 2
+\end{gather}
+$Sum_2 = 1 + 3 + 4 + 4 + 2 = 14$
+
+\paragraph{}
+
+Для третьей веришны сумма сетевых расстояний будет состоять из сумм представленных ниже 
+путей от третьей вершины графа к остальным.
+Далее через тире обозначенны вершины графа и сумма весов всех ребер в данном пути:
+\begin{gather}
+3 - 1 : weight sum = 1 \\
+3 - 2 : weight sum = 1 \\
+3 - 4 : weight sum = 2 \\
+3 - 4 - 5 : weight sum = 3 \\
+3 - 4 - 6 : weight sum = 3 \\
+\end{gather}
+$Sum_3 = 1 + 1 + 2 + 3 + 3 = 10$
+
+\paragraph{}
+
+Для четвертой веришны сумма сетевых расстояний будет состоять из сумм представленных ниже 
+путей от четвертой вершины графа к остальным.
+Далее через тире обозначенны вершины графа и сумма весов всех ребер в данном пути:
+\begin{gather}
+4 - 5 : weight sum = 1 \\
+4 - 6 : weight sum = 1 \\
+4 - 3 : weight sum = 3 \\
+4 - 3 - 1 : weight sum = 4 \\
+4 - 3 - 2 : weight sum = 4 \\
+\end{gather}
+$Sum_4 = 1 + 1 + 2 + 3 + 3 = 10$
+
+\paragraph{}
+
+Для пятой веришны сумма сетевых расстояний будет состоять из сумм представленных ниже 
+путей от пятой вершины графа к остальным.
+Далее через тире обозначенны вершины графа и сумма весов всех ребер в данном пути:
+\begin{gather}
+5 - 3 : weight sum = 1 \\
+5 - 4 - 3 : weight sum = 3 \\
+5 - 4 - 3 - 1 : weight sum = 4 \\
+5 - 4 - 3 - 2 : weight sum = 4 \\
+5 - 6 : weight sum = 2
+\end{gather}
+$Sum_5 = 1 + 3 + 4 + 4 + 2 = 14$
+
+\paragraph{}
+
+Для шестой веришны сумма сетевых расстояний будет состоять из сумм представленных ниже 
+путей от шестой вершины графа к остальным.
+Далее через тире обозначенны вершины графа и сумма весов всех ребер в данном пути:
+\begin{gather}
+5 - 3 : weight sum = 1 \\
+5 - 4 - 3 : weight sum = 3 \\
+5 - 4 - 3 - 1 : weight sum = 4 \\
+5 - 4 - 3 - 2 : weight sum = 4 \\
+5 - 6 : weight sum = 2
+\end{gather}
+$Sum_6 = 1 + 3 + 4 + 4 + 2 = 14$
+
+\paragraph{}
+
+Для обновленного графа, в котором мы заменили вес критического ребра на 2 получим сумму сетевых расстояний:
+В таком случае сумма сетевых расстояний для обновленного графа будет равнятся $S^* = 14 + 14 + 10 + 10 + 14 + 14 = 76$.
 
 \paragraph{При $\gamma = 2 > 1$.}
 Алгоритм меняет вес критического ребра на $2 \cdot w_i = 8$ (рис.~\ref{fig:min_graph_8}).
@@ -1419,12 +1626,40 @@ $\gamma < 1$ приводит к минимизации суммы сетевы�
 При $\gamma = 0.5$ сумма сетевых расстояний составила $2.60341\cdot10^{10}$. 
 При $\gamma = 24.5$ сумма сетевых расстояний составила $3.84203\cdot10^{10}$.
 
+\paragraph{}
+
+Без флагов оптимизации нашей программе потребовалось 7 минут 39 секнуд реального времени.
+С флагом оптимизации -O2 нашей программе потребовалось 45 секунд реального времени.
+Программа использовала 16 потоков. Время измерялось утилитой time.
+
 \begin{figure}[h]
     \centering
     \includegraphics[scale=0.3]{vlad_2009_min.png}
     \caption{Сокращенная транспортная сеть города Владивостока на 2009-й год.}
     \label{fig:vlad_2009_min}
 \end{figure}
+
+\section {Инсталляция и запуск}
+
+\paragraph{Генерация отчета}
+Файл отчета в формате pdf генерируется также при помощи nuweb. В папке с report.w необходимо выполнить:
+$$nuweb\ report.w$$
+В результате сгенерируется файл Tex $report.tex$, затем выполнить:
+$$pdftlatex\ report.tex$$
+Иногда nuweb сам выводит сообщение о том, что требуется сгенерировать tex файл еще раз. Тогда требуется повторить описанные здесь операции.
+
+\paragraph{Запуск программы}
+
+Запуск проводится на orta.dvfu.ru.
+Для запуска программы требуется сгенерировать исходные файлы с помощью 
+$$nuweb\ report.w$$
+Далее перейти в папку src/ и выполнить:
+
+$$cmake\ .$$
+$$make$$
+
+Пример запуска:
+$$./main\ ../graphs/vlad-2009.dat$$
 
 \section{Заключение}
 
@@ -1440,5 +1675,8 @@ Dijkstra E. W. \textit{A note on two problems in connection with graphs} //
 \textit{Numer. Math} — Springer Science+Business Media, 1959.
 — Vol. 1, Iss. 1. — P. 269–271.
 \end{thebibliography}
+
+Для визуализации графов использовалась программа с открытым исходным кодом $gephi$.
+https://github.com/gephi/gephi
 
 \end{document}

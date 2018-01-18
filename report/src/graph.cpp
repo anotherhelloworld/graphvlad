@@ -25,9 +25,11 @@ void Graph::open(std::string filename) {
                   int v;
                   int u;
                   in >> index >> vertex >> weight;
+
+                  
                   if (coord.find(index) != coord.end()) {
                       v = coord[index];
-                  }
+                  } 
                   else {
                       v = n++;
                       coord.insert(std::make_pair(index, v));
@@ -39,6 +41,9 @@ void Graph::open(std::string filename) {
                       u = n++;
                       coord.insert(std::make_pair(vertex, u));
                   }
+                  
+
+                  
                   AddEdge(u, v, weight, id++);
                   AddEdge(v, u, weight, id++);
         } 

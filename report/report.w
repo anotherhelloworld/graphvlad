@@ -932,7 +932,7 @@ $Sum_6 = 1 + 3 + 4 + 4 + 2 = 14$
 Алгоритм меняет вес критического ребра на $2 \cdot w_i = 8$ (рис.~\ref{fig:min_graph_8}).
 
 \begin{figure}[h]
-    \centeringp
+    \centering
     \includegraphics[scale=0.7]{min_graph_8.png}
     \caption{Если увеличить вес ребра между 3-й и 4-й вершинами сумма сетевых расстояний максимизируется}
     \label{fig:min_graph_8}
@@ -1034,6 +1034,6 @@ Dijkstra E. W. \textit{A note on two problems in connection with graphs} //
 \end{thebibliography}
 
 Для визуализации графов использовалась программа с открытым исходным кодом $gephi$.
-\url{https://github.com/gephi/gephi}
+https://github.com/gephi/gephi
 
 \end{document}
